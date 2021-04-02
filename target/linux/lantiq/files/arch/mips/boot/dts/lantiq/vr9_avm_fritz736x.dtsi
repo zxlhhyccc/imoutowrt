@@ -86,7 +86,8 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		reg = <0>;
-		mtd-mac-address = <&urlader 0xa91>;
+		nvmem-cells = <&macaddr_urlader_a91>;
+		nvmem-cell-names = "mac-address";
 		mac-address-increment = <(-2)>;
 		lantiq,switch;
 
@@ -203,4 +204,14 @@
 
 &usb1 {
 	status = "okay";
+};
+
+&urlader {
+	compatible = "nvmem-cells";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	macaddr_urlader_a91: macaddr@a91 {
+		reg = <0xa91 0x6>;
+	};
 };
