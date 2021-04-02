@@ -239,7 +239,8 @@
 	qcom,emulation = <0>;
 	mdiobus = <&mdio0>;
 
-	mtd-mac-address = <&eeprom 0x0>;
+	nvmem-cells = <&macaddr_eeprom_0>;
+	nvmem-cell-names = "mac-address";
 
 	fixed-link {
 		speed = <1000>;
@@ -255,7 +256,8 @@
 	qcom,emulation = <0>;
 	mdiobus = <&mdio0>;
 
-	mtd-mac-address = <&eeprom 0x6>;
+	nvmem-cells = <&macaddr_eeprom_6>;
+	nvmem-cell-names = "mac-address";
 
 	fixed-link {
 		speed = <1000>;
