@@ -87,7 +87,7 @@
 		#size-cells = <0>;
 		reg = <0>;
 		mtd-mac-address = <&urlader 0xa91>;
-		mtd-mac-address-increment = <(-2)>;
+		mac-address-increment = <(-2)>;
 		lantiq,switch;
 
 		ethernet@0 {
