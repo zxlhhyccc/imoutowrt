@@ -38,6 +38,7 @@ ALLWIFIBOARDS:= \
 	mikrotik_hap-ac3 \
 	mikrotik_sxtsq-5-ac \
 	p2w_r619ac \
+	qnap_301w \
 	qxwlan_e2600ac-c1 \
 	qxwlan_e2600ac-c2 \
 	teltonika_rutx \
@@ -125,6 +126,7 @@ $(eval $(call generate-ipq-wifi-package,mikrotik_hap-ac2,Mikrotik hAP ac2))
 $(eval $(call generate-ipq-wifi-package,mikrotik_hap-ac3,Mikrotik hAP ac3))
 $(eval $(call generate-ipq-wifi-package,mikrotik_sxtsq-5-ac,MikroTik SXTsq 5 ac))
 $(eval $(call generate-ipq-wifi-package,p2w_r619ac,P&W R619AC))
+$(eval $(call generate-ipq-wifi-package,qnap_301w,QNAP 301w))
 $(eval $(call generate-ipq-wifi-package,qxwlan_e2600ac-c1,Qxwlan E2600AC C1))
 $(eval $(call generate-ipq-wifi-package,qxwlan_e2600ac-c2,Qxwlan E2600AC C2))
 $(eval $(call generate-ipq-wifi-package,teltonika_rutx,Teltonika RUTX))
