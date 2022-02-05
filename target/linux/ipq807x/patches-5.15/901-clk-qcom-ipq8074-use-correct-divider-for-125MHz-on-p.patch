@@ -1,0 +1,44 @@
+From 8af6a44f686c35f3c1eaa3a4160c4a6e84747876 Mon Sep 17 00:00:00 2001
+From: Robert Marko <robimarko@gmail.com>
+Date: Wed, 19 Oct 2022 23:27:55 +0200
+Subject: [PATCH] clk: qcom: ipq8074: use correct divider for 125MHz on port 6
+
+NSS port 6 clocks are currently broken if 125MHz is desired, we will
+actually get 104.6MHz instead.
+
+As a workaround reorder the dividers so that one that produces 125MHz
+is used.
+
+Fixes: 7117a51ed303 ("clk: qcom: ipq8074: add NSS ethernet port clocks")
+Signed-off-by: Robert Marko <robimarko@gmail.com>
+---
+ drivers/clk/qcom/gcc-ipq8074.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq8074.c
+index 069ad3b5bca0..a0a4881182ce 100644
+--- a/drivers/clk/qcom/gcc-ipq8074.c
++++ b/drivers/clk/qcom/gcc-ipq8074.c
+@@ -1876,8 +1876,8 @@ static const struct freq_tbl ftbl_nss_port6_rx_clk_src[] = {
+ 	F(25000000, P_UNIPHY2_RX, 5, 0, 0),
+ 	F(25000000, P_UNIPHY2_RX, 12.5, 0, 0),
+ 	F(78125000, P_UNIPHY2_RX, 4, 0, 0),
+-	F(125000000, P_UNIPHY2_RX, 1, 0, 0),
+ 	F(125000000, P_UNIPHY2_RX, 2.5, 0, 0),
++	F(125000000, P_UNIPHY2_RX, 1, 0, 0),
+ 	F(156250000, P_UNIPHY2_RX, 2, 0, 0),
+ 	F(312500000, P_UNIPHY2_RX, 1, 0, 0),
+ 	{ }
+@@ -1918,8 +1918,8 @@ static const struct freq_tbl ftbl_nss_port6_tx_clk_src[] = {
+ 	F(25000000, P_UNIPHY2_TX, 5, 0, 0),
+ 	F(25000000, P_UNIPHY2_TX, 12.5, 0, 0),
+ 	F(78125000, P_UNIPHY2_TX, 4, 0, 0),
+-	F(125000000, P_UNIPHY2_TX, 1, 0, 0),
+ 	F(125000000, P_UNIPHY2_TX, 2.5, 0, 0),
++	F(125000000, P_UNIPHY2_TX, 1, 0, 0),
+ 	F(156250000, P_UNIPHY2_TX, 2, 0, 0),
+ 	F(312500000, P_UNIPHY2_TX, 1, 0, 0),
+ 	{ }
+-- 
+2.37.3
+
