@@ -11,7 +11,7 @@ FEATURES:=squashfs nand usb pci pcie gpio pwm
 CPU_TYPE:=cortex-a9
 SUBTARGETS:=generic
 
-KERNEL_PATCHVER:=5.4
+KERNEL_PATCHVER:=5.10
 KERNEL_TESTING_PATCHVER:=5.10
 
 define Target/Description
@@ -25,6 +25,6 @@ KERNELNAME:=zImage dtbs
 DEFAULT_PACKAGES += nvram \
 	osafeloader oseama otrx \
 	kmod-gpio-button-hotplug \
-	kmod-leds-gpio autocore-arm
+	kmod-leds-gpio
 
 $(eval $(call BuildTarget))

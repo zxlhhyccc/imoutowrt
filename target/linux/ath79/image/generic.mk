@@ -160,33 +160,6 @@ define Build/wrgg-pad-rootfs
 	$(STAGING_DIR_HOST)/bin/padjffs2 $(IMAGE_ROOTFS) -c 64 >>$@
 endef
 
-define Build/xwrt_csac10-factory
-  -[ -f "$@" ] && \
-  mkdir -p "$@.tmp" && \
-  mv "$@" "$@.tmp/UploadBrush-bin.img" && \
-  binmd5=$$($(MKHASH) md5 "$@.tmp/UploadBrush-bin.img" | head -c32) && \
-  oemmd5=$$(echo -n TB-CSAC10-QCA9563_9886-ROUTE-CSAC10 | $(MKHASH) md5 | head -c32) && \
-  echo -n $${binmd5}$${oemmd5} | $(MKHASH) md5 | head -c32 >"$@.tmp/bin_random_oem.txt" && \
-  echo -n V4.4-201910201745 >"$@.tmp/version.txt" && \
-  $(TAR) -czf $@.tmp.tgz -C "$@.tmp" UploadBrush-bin.img bin_random_oem.txt version.txt && \
-  $(STAGING_DIR_HOST)/bin/openssl aes-256-cbc -md md5 -salt -in $@.tmp.tgz -out "$@" -k QiLunSmartWL && \
-  printf %32s CSAC10 >>"$@" && \
-  rm -rf "$@.tmp"
-endef
-
-define Build/xwrt_csac05-factory
-  -[ -f "$@" ] && \
-  mkdir -p "$@.tmp" && \
-  mv "$@" "$@.tmp/UploadBrush-bin.img" && \
-  binmd5=$$($(MKHASH) md5 "$@.tmp/UploadBrush-bin.img" | head -c32) && \
-  oemmd5=$$(echo -n TB-CSAC05-QCA9563_9886-ROUTE-CSAC05 | $(MKHASH) md5 | head -c32) && \
-  echo -n $${binmd5}$${oemmd5} | $(MKHASH) md5 | head -c32 >"$@.tmp/bin_random_oem.txt" && \
-  echo -n V4.4-201910201745 >"$@.tmp/version.txt" && \
-  $(TAR) -czf $@.tmp.tgz -C "$@.tmp" UploadBrush-bin.img bin_random_oem.txt version.txt && \
-  $(STAGING_DIR_HOST)/bin/openssl aes-256-cbc -md md5 -salt -in $@.tmp.tgz -out "$@" -k QiLunSmartWL && \
-  printf %32s CSAC05 >>"$@" && \
-  rm -rf "$@.tmp"
-endef
 
 define Device/seama
   KERNEL := kernel-bin | append-dtb | relocate-kernel | lzma
@@ -885,20 +858,13 @@ endef
 TARGET_DEVICES += dlink_dap-2680-a1
 
 define Device/dlink_dap-2695-a1
+  $(Device/dlink_dap-2xxx)
   SOC := qca9558
-  DEVICE_PACKAGES := ath10k-firmware-qca988x-ct kmod-ath10k-ct
   DEVICE_VENDOR := D-Link
   DEVICE_MODEL := DAP-2695
   DEVICE_VARIANT := A1
-  IMAGES := factory.img sysupgrade.bin
+  DEVICE_PACKAGES := ath10k-firmware-qca988x-ct kmod-ath10k-ct
   IMAGE_SIZE := 15360k
-  IMAGE/default := append-kernel | pad-offset 65536 160
-  IMAGE/factory.img := $$(IMAGE/default) | append-rootfs | wrgg-pad-rootfs | \
-	mkwrggimg | check-size
-  IMAGE/sysupgrade.bin := $$(IMAGE/default) | mkwrggimg | append-rootfs | \
-	wrgg-pad-rootfs | check-size | append-metadata
-  KERNEL := kernel-bin | append-dtb | relocate-kernel | lzma
-  KERNEL_INITRAMFS := $$(KERNEL) | mkwrggimg
   DAP_SIGNATURE := wapac02_dkbs_dap2695
   SUPPORTED_DEVICES += dap-2695-a1
 endef
@@ -1075,6 +1041,15 @@ define Device/elecom_wrc-300ghbk2-i
 endef
 TARGET_DEVICES += elecom_wrc-300ghbk2-i
 
+define Device/embeddedwireless_balin
+  SOC := ar9344
+  DEVICE_VENDOR := Embedded Wireless
+  DEVICE_MODEL := Balin
+  DEVICE_PACKAGES := kmod-usb-chipidea2
+  IMAGE_SIZE := 16000k
+endef
+TARGET_DEVICES += embeddedwireless_balin
+
 define Device/embeddedwireless_dorin
   SOC := ar9331
   DEVICE_VENDOR := Embedded Wireless
@@ -1229,7 +1204,7 @@ define Device/glinet_6408
   SOC := ar9331
   DEVICE_VENDOR := GL.iNet
   DEVICE_MODEL := 6408
-  DEVICE_PACKAGES := kmod-usb2
+  DEVICE_PACKAGES := kmod-usb-chipidea2
   IMAGE_SIZE := 8000k
   TPLINK_HWID := 0x08000001
   IMAGES := sysupgrade.bin
@@ -1242,7 +1217,7 @@ define Device/glinet_6416
   SOC := ar9331
   DEVICE_VENDOR := GL.iNet
   DEVICE_MODEL := 6416
-  DEVICE_PACKAGES := kmod-usb2
+  DEVICE_PACKAGES := kmod-usb-chipidea2
   IMAGE_SIZE := 16192k
   TPLINK_HWID := 0x08000001
   IMAGES := sysupgrade.bin
@@ -1511,6 +1486,12 @@ define Device/meraki_mr16
   IMAGE_SIZE := 15616k
   DEVICE_PACKAGES := kmod-owl-loader
   SUPPORTED_DEVICES += mr16
+  DEVICE_COMPAT_VERSION := 2.0
+  DEVICE_COMPAT_MESSAGE := Partitions differ from ar71xx version of MR16. Image format is incompatible. \
+	To use sysupgrade, you must change /lib/update/common.sh::get_image to prepend 128K zeroes to this image, \
+	and change the bootcmd in u-boot to "bootm 0xbf0a0000". After that, you can use "sysupgrade -F". \
+	For more details, see the OpenWrt Wiki: https://openwrt.org/toh/meraki/mr16, \
+	or the commit message of the MR16 ath79 port on git.openwrt.org.
 endef
 TARGET_DEVICES += meraki_mr16
 
@@ -1570,7 +1551,6 @@ define Device/nec_wg800hp
 	append-rootfs | pad-rootfs | check-size | \
 	xor-image -p 6A57190601121E4C004C1E1201061957 -x | nec-fw LASER_ATERM
   DEVICE_PACKAGES := kmod-ath10k-ct-smallbuffers ath10k-firmware-qca9887-ct-full-htt
-  DEFAULT := n
 endef
 TARGET_DEVICES += nec_wg800hp
 
@@ -1599,6 +1579,23 @@ define Device/netgear_ex7300
   DEVICE_MODEL := EX7300
 endef
 TARGET_DEVICES += netgear_ex7300
+
+define Device/netgear_ex7300-v2
+  $(Device/netgear_generic)
+  SOC := qcn5502
+  DEVICE_MODEL := EX7300
+  DEVICE_VARIANT := v2
+  UIMAGE_MAGIC := 0x27051956
+  NETGEAR_BOARD_ID := EX7300v2series
+  NETGEAR_HW_ID := 29765907+16+0+128
+  IMAGE_SIZE := 14528k
+  IMAGE/default := append-kernel | pad-offset $$$$(BLOCKSIZE) 64 | \
+	netgear-rootfs | pad-rootfs
+  IMAGE/sysupgrade.bin := $$(IMAGE/default) | check-size | append-metadata
+  IMAGE/factory.img := $$(IMAGE/default) | check-size | netgear-dni
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9984-ct
+endef
+TARGET_DEVICES += netgear_ex7300-v2
 
 define Device/netgear_wndr3x00
   $(Device/netgear_generic)
@@ -2463,23 +2460,6 @@ define Device/xiaomi_mi-router-4q
   IMAGE_SIZE := 14336k
 endef
 TARGET_DEVICES += xiaomi_mi-router-4q
-
-define Device/xwrt_csac
-  $(Device/loader-okli-uimage)
-  SOC := qca9563
-  DEVICE_VENDOR := XWRT
-  DEVICE_MODEL := CSAC
-  IMAGE_SIZE := 14464k
-  LOADER_FLASH_OFFS := 0x60000
-  KERNEL := kernel-bin | append-dtb | lzma | uImage lzma -M 0x4f4b4c49
-  IMAGES += breed-factory.bin factory-10.bin factory-05.bin
-  IMAGE/breed-factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | \
-			     prepad-okli-kernel $(1) | pad-to 14528k | append-okli-kernel $(1)
-  IMAGE/factory-10.bin := $$(IMAGE/breed-factory.bin) | xwrt_csac10-factory $(1)
-  IMAGE/factory-05.bin := $$(IMAGE/breed-factory.bin) | xwrt_csac05-factory $(1)
-  DEVICE_PACKAGES := kmod-leds-reset kmod-ath10k-ct ath10k-firmware-qca9888-ct kmod-usb-core kmod-usb2
-endef
-TARGET_DEVICES += xwrt_csac
 
 define Device/yuncore_a770
   SOC := qca9531

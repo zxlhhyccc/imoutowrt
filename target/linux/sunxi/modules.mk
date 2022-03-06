@@ -4,7 +4,7 @@
 
 define KernelPackage/rtc-sunxi
     SUBMENU:=$(OTHER_MENU)
-    TITLE:=AllWinner A10/A20 built-in RTC support
+    TITLE:=Sunxi SoC built-in RTC support
     DEPENDS:=@TARGET_sunxi
     $(call AddDepends/rtc)
     KCONFIG:= \
@@ -15,7 +15,7 @@ define KernelPackage/rtc-sunxi
 endef
 
 define KernelPackage/rtc-sunxi/description
- Support for the AllWinner A10/A20 SoC's onboard RTC
+ Support for the AllWinner sunXi SoC's onboard RTC
 endef
 
 $(eval $(call KernelPackage,rtc-sunxi))
@@ -23,7 +23,7 @@ $(eval $(call KernelPackage,rtc-sunxi))
 define KernelPackage/sunxi-ir
     SUBMENU:=$(OTHER_MENU)
     TITLE:=Sunxi SoC built-in IR support (A20)
-    DEPENDS:=@TARGET_sunxi +kmod-multimedia-input
+    DEPENDS:=@TARGET_sunxi +kmod-input-core
     $(call AddDepends/rtc)
     KCONFIG:= \
 	CONFIG_MEDIA_SUPPORT=y \

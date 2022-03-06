@@ -1,20 +1,32 @@
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -256,6 +256,11 @@ properties:
-           - const: friendlyarm,nanopi-r1
-           - const: allwinner,sun8i-h3
- 
-+      - description: FriendlyARM NanoPi R1S H5
-+        items:
-+          - const: friendlyarm,nanopi-r1s-h5
-+          - const: allwinner,sun50i-h5
-+
-       - description: Gemei G9 Tablet
-         items:
-           - const: gemei,g9
+From 9962cb9be2db877c232aaf00db40125c0d7bf4bc Mon Sep 17 00:00:00 2001
+From: Chukun Pan <amadeus@jmu.edu.cn>
+Date: Mon, 17 May 2021 00:35:22 +0800
+Subject: [PATCH] arm64: dts: allwinner: h5: Add NanoPi R1S H5 support
+
+The NanoPi R1S H5 is a open source board made by FriendlyElec.
+It has the following features:
+
+- Allwinner H5, Quad-core Cortex-A53
+- 512MB DDR3 RAM
+- 10/100/1000M Ethernet x 2
+- RTL8189ETV WiFi 802.11b/g/n
+- USB 2.0 host port (A)
+- MicroSD Slot
+- Serial Debug Port
+- 5V 2A DC power-supply
+
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20210516163523.9484-2-amadeus@jmu.edu.cn
+---
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../dts/allwinner/sun50i-h5-nanopi-r1s-h5.dts | 195 ++++++++++++++++++
+ 2 files changed, 196 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-r1s-h5.dts
+
 --- a/arch/arm64/boot/dts/allwinner/Makefile
 +++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -24,6 +24,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-lib
+@@ -24,6 +24,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-li
  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-libretech-all-h5-cc.dtb
  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
@@ -24,13 +36,14 @@
  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus.dtb
 --- /dev/null
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-r1s-h5.dts
-@@ -0,0 +1,202 @@
+@@ -0,0 +1,191 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
-+ * Copyright (C) 2021 AmadeusGhost <amadeus@jmu.edu.cn>
++ * Copyright (C) 2021 Chukun Pan <amadeus@jmu.edu.cn>
 + *
-+ * Based on sun50i-h5-nanopi-neo2.dts, which is:
-+ *   Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
++ * Based on sun50i-h5-nanopi-neo-plus2.dts, which is:
++ *   Copyright (C) 2017 Antony Antony <antony@phenome.org>
++ *   Copyright (C) 2016 ARM Ltd.
 + */
 +
 +/dts-v1/;
@@ -48,11 +61,6 @@
 +		ethernet0 = &emac;
 +		ethernet1 = &rtl8189etv;
 +		serial0 = &uart0;
-+
-+		led-boot = &led_sys;
-+		led-failsafe = &led_sys;
-+		led-running = &led_sys;
-+		led-upgrade = &led_sys;
 +	};
 +
 +	chosen {
@@ -62,9 +70,10 @@
 +	leds {
 +		compatible = "gpio-leds";
 +
-+		led_sys: sys {
++		sys {
 +			label = "nanopi:red:sys";
 +			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
 +		};
 +
 +		lan {
@@ -142,13 +151,6 @@
 +
 +&ehci1 {
 +	status = "okay";
-+
-+	usb-eth@1 {
-+		compatible = "realtek,rtl8153";
-+		reg = <1>;
-+
-+		realtek,led-data = <0x78>;
-+	};
 +};
 +
 +&ehci2 {
@@ -175,10 +177,9 @@
 +	status = "okay";
 +
 +	eeprom@51 {
-+		compatible = "atmel,24c02";
-+		pagesize = <16>;
++		compatible = "microchip,24c02";
 +		reg = <0x51>;
-+		read-only;
++		pagesize = <16>;
 +	};
 +};
 +
