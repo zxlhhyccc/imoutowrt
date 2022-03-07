@@ -114,27 +114,27 @@ function dev_cfg(devname)
     local mimo = http.formvalue("__mimo")
     if mimo == "0" then
         cfgs.ETxBfEnCond=1
-        cfgs.MUTxRxEnable=0
+        cfgs.MUTxRxEnable=1
         cfgs.ITxBfEn=1
     elseif mimo == "1" then
         cfgs.ETxBfEnCond=1
-        cfgs.MUTxRxEnable=0
+        cfgs.MUTxRxEnable=1
         cfgs.ITxBfEn=1
     elseif mimo == "2" then
         cfgs.ETxBfEnCond=1
-        cfgs.MUTxRxEnable=0
+        cfgs.MUTxRxEnable=1
         cfgs.ITxBfEn=1
     elseif mimo == "3" then
         cfgs.ETxBfEnCond=1
-        cfgs.MUTxRxEnable=0
+        cfgs.MUTxRxEnable=1
         cfgs.ITxBfEn=1
     elseif mimo == "4" then
         cfgs.ETxBfEnCond=1
-        cfgs.MUTxRxEnable=0
+        cfgs.MUTxRxEnable=1
         cfgs.ITxBfEn=1
     else
        cfgs.ETxBfEnCond=1
-       cfgs.MUTxRxEnable=0
+       cfgs.MUTxRxEnable=1
        cfgs.ITxBfEn=1
     end
 
