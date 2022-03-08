@@ -22,7 +22,7 @@ TARGET_DEVICES += cubietech_cubietruck
 define Device/friendlyarm_nanopi-m1-plus
   DEVICE_VENDOR := FriendlyARM
   DEVICE_MODEL := NanoPi M1 Plus
-  DEVICE_PACKAGES:= kmod-leds-gpio kmod-brcmfmac \
+  DEVICE_PACKAGES:=kmod-leds-gpio kmod-brcmfmac \
 	cypress-firmware-43430-sdio wpad-basic-wolfssl
   SOC := sun8i-h3
 endef
@@ -48,7 +48,7 @@ define Device/friendlyarm_nanopi-r1
   DEVICE_VENDOR := FriendlyARM
   DEVICE_MODEL := NanoPi R1
   DEVICE_PACKAGES := kmod-usb-net-rtl8152 kmod-leds-gpio \
-	kmod-brcmfmac cypress-firmware-43430-sdio wpad-basic-wolfssl	
+	kmod-brcmfmac cypress-firmware-43430-sdio wpad-basic-wolfssl
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += friendlyarm_nanopi-r1
@@ -56,6 +56,7 @@ TARGET_DEVICES += friendlyarm_nanopi-r1
 define Device/friendlyarm_zeropi
   DEVICE_VENDOR := FriendlyARM
   DEVICE_MODEL := ZeroPi
+  DEVICE_PACKAGES := kmod-rtc-sunxi
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += friendlyarm_zeropi
@@ -66,6 +67,8 @@ define Device/lamobo_lamobo-r1
   DEVICE_ALT0_VENDOR := Bananapi
   DEVICE_ALT0_MODEL := BPi-R1
   DEVICE_PACKAGES := kmod-ata-sunxi kmod-rtl8192cu wpad-basic-wolfssl
+  DEVICE_COMPAT_VERSION := 1.1
+  DEVICE_COMPAT_MESSAGE := Config cannot be migrated from swconfig to DSA
   SOC := sun7i-a20
 endef
 TARGET_DEVICES += lamobo_lamobo-r1
@@ -81,7 +84,7 @@ TARGET_DEVICES += lemaker_bananapi
 define Device/sinovoip_bananapi-m2-berry
   DEVICE_VENDOR := Sinovoip
   DEVICE_MODEL := Banana Pi M2 Berry
-  DEVICE_PACKAGES:=kmod-rtc-sunxi kmod-ata-sunxi kmod-brcmfmac \
+  DEVICE_PACKAGES:=kmod-ata-sunxi kmod-brcmfmac \
 	cypress-firmware-43430-sdio wpad-basic-wolfssl
   SUPPORTED_DEVICES:=lemaker,bananapi-m2-berry
   SOC := sun8i-v40
@@ -176,6 +179,7 @@ TARGET_DEVICES += sinovoip_bananapi-m2-plus
 define Device/xunlong_orangepi-one
   DEVICE_VENDOR := Xunlong
   DEVICE_MODEL := Orange Pi One
+  DEVICE_PACKAGES:=kmod-rtc-sunxi
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += xunlong_orangepi-one
@@ -199,6 +203,7 @@ TARGET_DEVICES += xunlong_orangepi-pc-plus
 define Device/xunlong_orangepi-plus
   DEVICE_VENDOR := Xunlong
   DEVICE_MODEL := Orange Pi Plus
+  DEVICE_PACKAGES:=kmod-rtc-sunxi
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += xunlong_orangepi-plus
@@ -214,6 +219,7 @@ TARGET_DEVICES += xunlong_orangepi-r1
 define Device/xunlong_orangepi-zero
   DEVICE_VENDOR := Xunlong
   DEVICE_MODEL := Orange Pi Zero
+  DEVICE_PACKAGES:=kmod-rtc-sunxi
   SOC := sun8i-h2-plus
 endef
 TARGET_DEVICES += xunlong_orangepi-zero
@@ -221,6 +227,7 @@ TARGET_DEVICES += xunlong_orangepi-zero
 define Device/xunlong_orangepi-2
   DEVICE_VENDOR := Xunlong
   DEVICE_MODEL := Orange Pi 2
+  DEVICE_PACKAGES:=kmod-rtc-sunxi
   SOC := sun8i-h3
 endef
 TARGET_DEVICES += xunlong_orangepi-2

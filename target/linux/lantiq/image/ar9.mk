@@ -4,11 +4,11 @@ define Device/avm_fritz7312
   SOC := ar9
   IMAGE_SIZE := 15744k
   LOADER_FLASH_OFFS := 0x31000
-  DEVICE_PACKAGES := kmod-ath9k kmod-owl-loader wpad-basic \
+  DEVICE_PACKAGES := kmod-ath9k kmod-owl-loader wpad-basic-wolfssl \
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-b kmod-ltq-atm-ar9 \
 	ltq-adsl-app ppp-mod-pppoa \
-	-swconfig
+	kmod-ltq-deu-ar9 -swconfig
 endef
 TARGET_DEVICES += avm_fritz7312
 
@@ -20,18 +20,18 @@ define Device/avm_fritz7320
   SOC := ar9
   IMAGE_SIZE := 15744k
   LOADER_FLASH_OFFS := 0x31000
-  DEVICE_PACKAGES := kmod-ath9k kmod-owl-loader wpad-basic \
+  DEVICE_PACKAGES := kmod-ath9k kmod-owl-loader wpad-basic-wolfssl \
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-b kmod-ltq-atm-ar9 \
 	ltq-adsl-app ppp-mod-pppoa \
-	kmod-usb-dwc2 -swconfig
+	kmod-ltq-deu-ar9 kmod-usb-dwc2 -swconfig
   SUPPORTED_DEVICES += FRITZ7320
 endef
 TARGET_DEVICES += avm_fritz7320
 
 define Device/bt_homehub-v3a
   $(Device/NAND)
-  DEVICE_VENDOR := British Telecom
+  DEVICE_VENDOR := British Telecom (BT)
   DEVICE_MODEL := Home Hub 3
   DEVICE_VARIANT := Type A
   BOARD_NAME := BTHOMEHUBV3A
@@ -40,8 +40,9 @@ define Device/bt_homehub-v3a
   DEVICE_PACKAGES := kmod-usb-dwc2 \
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-a kmod-ltq-atm-ar9 \
+	kmod-ltq-deu-ar9 \
 	ltq-adsl-app ppp-mod-pppoa \
-	kmod-ath9k kmod-owl-loader wpad-basic \
+	kmod-ath9k kmod-owl-loader wpad-basic-wolfssl \
 	uboot-envtools
   SUPPORTED_DEVICES += BTHOMEHUBV3A
   DEFAULT := n
@@ -59,7 +60,7 @@ define Device/buffalo_wbmr-hp-g300h-a
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-a kmod-ltq-atm-ar9 \
 	ltq-adsl-app ppp-mod-pppoa \
-	kmod-ath9k kmod-owl-loader wpad-basic
+	kmod-ath9k kmod-owl-loader wpad-basic-wolfssl
   SUPPORTED_DEVICES := WBMR buffalo,wbmr-hp-g300h
 endef
 TARGET_DEVICES += buffalo_wbmr-hp-g300h-a
@@ -75,7 +76,7 @@ define Device/buffalo_wbmr-hp-g300h-b
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-b kmod-ltq-atm-ar9 \
 	ltq-adsl-app ppp-mod-pppoa \
-	kmod-ath9k kmod-owl-loader wpad-basic
+	kmod-ath9k kmod-owl-loader wpad-basic-wolfssl
   SUPPORTED_DEVICES := WBMR buffalo,wbmr-hp-g300h
 endef
 TARGET_DEVICES += buffalo_wbmr-hp-g300h-b
@@ -105,10 +106,10 @@ define Device/netgear_dgn3500
 	dgn3500-sercom-footer $(DGN3500_KERNEL_OFFSET_HEX) "WW" | pad-rootfs | \
 	check-size 16320k | pad-to 16384k
   DEVICE_PACKAGES := kmod-usb-dwc2 kmod-usb-ledtrig-usbport \
-	kmod-ath9k kmod-owl-loader wpad-basic \
+	kmod-ath9k kmod-owl-loader wpad-basic-wolfssl \
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-a kmod-ltq-atm-ar9 \
-	ltq-adsl-app ppp-mod-pppoa
+	kmod-ltq-deu-ar9 ltq-adsl-app ppp-mod-pppoa
   SUPPORTED_DEVICES += DGN3500
 endef
 TARGET_DEVICES += netgear_dgn3500
@@ -127,10 +128,10 @@ define Device/netgear_dgn3500b
 	dgn3500-sercom-footer $(DGN3500_KERNEL_OFFSET_HEX) "DE" | pad-rootfs | \
 	check-size 16320k | pad-to 16384k
   DEVICE_PACKAGES := kmod-usb-dwc2 kmod-usb-ledtrig-usbport \
-	kmod-ath9k kmod-owl-loader wpad-basic \
+	kmod-ath9k kmod-owl-loader wpad-basic-wolfssl \
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-b kmod-ltq-atm-ar9 \
-	ltq-adsl-app ppp-mod-pppoa
+	kmod-ltq-deu-ar9 ltq-adsl-app ppp-mod-pppoa
   SUPPORTED_DEVICES += DGN3500B
 endef
 TARGET_DEVICES += netgear_dgn3500b
@@ -140,10 +141,10 @@ define Device/zte_h201l
   DEVICE_MODEL := H201L
   IMAGE_SIZE := 7808k
   SOC := ar9
-  DEVICE_PACKAGES := kmod-ath9k-htc wpad-basic \
+  DEVICE_PACKAGES := kmod-ath9k-htc wpad-basic-wolfssl \
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-b kmod-ltq-atm-ar9 \
-	ltq-adsl-app ppp-mod-pppoe \
+	kmod-ltq-deu-ar9 ltq-adsl-app ppp-mod-pppoe \
 	kmod-usb-dwc2 kmod-usb-ledtrig-usbport \
 	kmod-ltq-tapi kmod-ltq-vmmc
   SUPPORTED_DEVICES += H201L
@@ -156,10 +157,10 @@ define Device/zyxel_p-2601hn
   DEVICE_VARIANT := F1/F3
   IMAGE_SIZE := 15616k
   SOC := ar9
-  DEVICE_PACKAGES := kmod-rt2800-usb wpad-basic \
+  DEVICE_PACKAGES := kmod-rt2800-usb wpad-basic-wolfssl \
 	kmod-ltq-adsl-ar9-mei kmod-ltq-adsl-ar9 \
 	kmod-ltq-adsl-ar9-fw-b kmod-ltq-atm-ar9 \
-	ltq-adsl-app ppp-mod-pppoe \
+	kmod-ltq-deu-ar9 ltq-adsl-app ppp-mod-pppoe \
 	kmod-usb-dwc2
   SUPPORTED_DEVICES += P2601HNFX
 endef

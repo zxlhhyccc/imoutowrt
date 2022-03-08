@@ -11,10 +11,7 @@ FEATURES:=usb usbgadget ext4 targz fpu audio display nand rootfs-part squashfs
 CPU_TYPE:=cortex-a8
 CPU_SUBTYPE:=vfpv3
 
-KERNEL_PATCHVER:=5.4
-KERNEL_TESTING_PATCHVER:=5.10
-
-MAINTAINER:=Alexander Couzens <lynxis@fe80.eu>
+KERNEL_PATCHVER:=5.10
 
 KERNELNAME:=zImage dtbs
 

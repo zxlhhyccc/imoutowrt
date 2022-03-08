@@ -49,7 +49,32 @@
 
 		edma@c080000 {
 			status = "okay";
-			qcom,num_gmac = <1>;
+			qcom,num_gmac = <3>;
+
+			gmac0 {
+				qcom,phy_mdio_addr = <3>;
+				qcom,poll_required = <1>;
+				/delete-property/ qcom,forced_speed;
+				/delete-property/ qcom,forced_duplex;
+				vlan_tag = <1 0x10>;
+			};
+
+			gmac1 {
+				qcom,phy_mdio_addr = <2>;
+				qcom,poll_required = <1>;
+				/delete-property/ qcom,forced_speed;
+				/delete-property/ qcom,forced_duplex;
+				vlan_tag = <1 0x08>;
+			};
+
+			gmac2 {
+				local-mac-address = [00 00 00 00 00 00];
+				qcom,phy_mdio_addr = <4>;
+				qcom,poll_required = <1>;
+				/delete-property/ qcom,forced_speed;
+				/delete-property/ qcom,forced_duplex;
+				vlan_tag = <1 0x20>;
+			};
 		};
 
 		gpio_export {
@@ -62,6 +87,7 @@
 				gpios = <&tlmm 63 GPIO_ACTIVE_HIGH>;
 			};
 		};
+
 	};
 
 	keys {
@@ -127,7 +153,6 @@
 			function = "mdio";
 			bias-pull-up;
 		};
-
 		mux_2 {
 			pins = "gpio52";
 			function = "mdc";
@@ -199,48 +224,40 @@
 				reg = <0x00000000 0x00040000>;
 				read-only;
 			};
-
 			partition@40000 {
 				label = "MIBIB";
 				reg = <0x00040000 0x00020000>;
 				read-only;
 			};
-
 			partition@60000 {
 				label = "QSEE";
 				reg = <0x00060000 0x00060000>;
 				read-only;
 			};
-
 			partition@c0000 {
 				label = "CDT";
 				reg = <0x000c0000 0x00010000>;
 				read-only;
 			};
-
 			partition@d0000 {
 				label = "DDRPARAMS";
 				reg = <0x000d0000 0x00010000>;
 				read-only;
 			};
-
 			partition@e0000 {
 				label = "APPSBLENV"; /* uboot env*/
 				reg = <0x000e0000 0x00010000>;
 			};
-
 			partition@f0000 {
 				label = "APPSBL"; /* uboot */
 				reg = <0x000f0000 0x00080000>;
 				read-only;
 			};
-
 			partition@170000 {
 				label = "ART";
 				reg = <0x00170000 0x00010000>;
 				read-only;
 			};
-
 			firmware@180000 {
 				compatible = "denx,fit";
 				label = "firmware";

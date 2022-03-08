@@ -25,15 +25,28 @@ case "$board" in
 		[ "$PHYNBR" = "1" ] && \
 			macaddr_add "$(mtd_get_mac_binary factory 0x4)" 1 > /sys${DEVPATH}/macaddress
 		;;
+	iptime,a3002mesh|\
+	iptime,a3004t)
+		hw_mac_addr="$(mtd_get_mac_binary factory 0x4)"
+		[ "$PHYNBR" = "0" ] && \
+			macaddr_setbit_la "$(macaddr_add $hw_mac_addr 3)" > /sys${DEVPATH}/macaddress
+		[ "$PHYNBR" = "1" ] && echo -n "$hw_mac_addr" > /sys${DEVPATH}/macaddress
+		;;
+	iptime,ax2004m)
+		if [ "$PHYNBR" = "1" ]; then
+			hw_mac_addr="$(mtd_get_mac_binary factory 0x4)"
+			macaddr_setbit_la "$(macaddr_add $hw_mac_addr 3)" > /sys${DEVPATH}/macaddress
+		fi
+		;;
 	jcg,q20)
 		[ "$PHYNBR" = "1" ] && \
 			macaddr_setbit_la "$(mtd_get_mac_binary Factory 0x4)" > /sys${DEVPATH}/macaddress
 		;;
-	jdcloud,re-sp-01b)
-		local index="$(find_mtd_index "config")"
-		local label_mac=$(macaddr_canonicalize $(dd if="/dev/mtd${index}" bs=12 skip=17449 iflag=skip_bytes count=1 2>/dev/null))
-		[ "$PHYNBR" -eq 0 ] && echo $label_mac > /sys${DEVPATH}/macaddress
-		[ "$PHYNBR" -eq 1 ] && macaddr_add $label_mac 0x800000 > /sys${DEVPATH}/macaddress
+	yuncore,ax820)
+		if [ "$PHYNBR" = "1" ]; then
+			base_mac=$(macaddr_add "$(mtd_get_mac_binary Factory 0x4)" 1)
+			macaddr_setbit_la "$base_mac" > /sys${DEVPATH}/macaddress
+		fi
 		;;
 	linksys,e5600|\
 	linksys,ea6350-v4|\

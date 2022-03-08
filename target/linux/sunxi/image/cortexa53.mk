@@ -43,8 +43,7 @@ TARGET_DEVICES += friendlyarm_nanopi-neo2
 define Device/friendlyarm_nanopi-r1s-h5
   DEVICE_VENDOR := FriendlyARM
   DEVICE_MODEL := Nanopi R1S H5
-  DEVICE_PACKAGES := kmod-gpio-button-hotplug kmod-rtl8189es \
-	kmod-usb2 kmod-usb-net-rtl8152 wpad-basic
+  DEVICE_PACKAGES := kmod-gpio-button-hotplug kmod-usb-net-rtl8152
   SUPPORTED_DEVICES:=nanopi-r1s-h5
   $(Device/sun50i-h5)
 endef
@@ -93,15 +92,6 @@ define Device/pine64_sopine-baseboard
   $(Device/sun50i-a64)
 endef
 TARGET_DEVICES += pine64_sopine-baseboard
-
-define Device/xunlong_orangepi-3
-  $(Device/sun50i-h6)
-  DEVICE_VENDOR := Xunlong
-  DEVICE_MODEL := Orange Pi 3
-  DEVICE_PACKAGES := kmod-usb3 kmod-usb-dwc3
-  SUNXI_DTS_DIR := allwinner/
-endef
-TARGET_DEVICES += xunlong_orangepi-3
 
 define Device/xunlong_orangepi-one-plus
   $(Device/sun50i-h6)

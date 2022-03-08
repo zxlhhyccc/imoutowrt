@@ -54,7 +54,7 @@ define Device/alfa-network_tube-e4g
   DEVICE_VENDOR := ALFA Network
   DEVICE_MODEL := Tube-E4G
   DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci uboot-envtools uqmi -iwinfo \
-	-kmod-rt2800-soc -wpad-openssl
+	-kmod-rt2800-soc -wpad-basic-wolfssl
   SUPPORTED_DEVICES += tube-e4g
 endef
 TARGET_DEVICES += alfa-network_tube-e4g
@@ -572,7 +572,6 @@ define Device/iodata_wn-ac1167gr
   IMAGE/factory.bin := $$(sysupgrade_bin) | check-size | \
 	elx-header 01040016 8844A2D168B45A2D
   DEVICE_PACKAGES := kmod-mt76x2
-  DEFAULT := n
 endef
 TARGET_DEVICES += iodata_wn-ac1167gr
 
@@ -1082,20 +1081,6 @@ define Device/tplink_archer-c2-v1
 endef
 TARGET_DEVICES += tplink_archer-c2-v1
 
-define Device/tplink_archer-c5-v4
-  $(Device/tplink-v2)
-  SOC := mt7620a
-  TPLINK_FLASHLAYOUT := 8Mmtk
-  TPLINK_HWID := 0x04DA857C
-  TPLINK_HWREV := 0x0C000600
-  TPLINK_HWREVADD := 0x04000000
-  IMAGES += factory.bin
-  DEVICE_MODEL := Archer C5
-  DEVICE_VARIANT := v4
-  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ohci kmod-usb-ledtrig-usbport kmod-mt76x2 kmod-switch-rtl8367b
-endef
-TARGET_DEVICES += tplink_archer-c5-v4
-
 define Device/tplink_archer-c50-v1
   $(Device/tplink-v2)
   SOC := mt7620a
@@ -1201,6 +1186,17 @@ define Device/wavlink_wl-wn579x3
 endef
 TARGET_DEVICES += wavlink_wl-wn579x3
 
+define Device/wevo_air-duo
+  SOC := mt7620a
+  IMAGE_SIZE := 15040k
+  UIMAGE_NAME := AIR DUO(0.0.0)
+  KERNEL_INITRAMFS_SUFFIX := .upload
+  DEVICE_VENDOR := WeVO
+  DEVICE_MODEL := AIR DUO
+  DEVICE_PACKAGES := kmod-mt76x2 kmod-usb2 kmod-usb-ohci kmod-usb-storage-uas
+endef
+TARGET_DEVICES += wevo_air-duo
+
 define Device/wrtnode_wrtnode
   SOC := mt7620n
   IMAGE_SIZE := 16064k
@@ -1220,23 +1216,6 @@ define Device/xiaomi_miwifi-mini
   SUPPORTED_DEVICES += miwifi-mini
 endef
 TARGET_DEVICES += xiaomi_miwifi-mini
-
-define Device/xiaomi_miwifi-r3
-  SOC := mt7620a
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
-  KERNEL_SIZE := 4096k
-  IMAGE_SIZE := 32768k
-  UBINIZE_OPTS := -E 5
-  IMAGES += kernel1.bin rootfs0.bin
-  IMAGE/kernel1.bin := append-kernel | check-size
-  IMAGE/rootfs0.bin := append-ubi | check-size
-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-  DEVICE_VENDOR := Xiaomi
-  DEVICE_MODEL := Mi Router R3
-  DEVICE_PACKAGES := kmod-mt76x2 kmod-usb2 kmod-usb-ohci uboot-envtools
-endef
-TARGET_DEVICES += xiaomi_miwifi-r3
 
 define Device/youku_yk-l1
   SOC := mt7620a
