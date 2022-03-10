@@ -2110,8 +2110,8 @@ typedef struct _WIFI_NODE_TYPE {
 #define INF_MBSSID_DEV_NAME		"rai"
 #else
 #ifdef BB_SOC
-#define INF_MAIN_DEV_NAME		"rai0"
-#define INF_MBSSID_DEV_NAME		"rai"
+#define INF_MAIN_DEV_NAME		"ra0"
+#define INF_MBSSID_DEV_NAME		"ra"
 #else
 #define INF_MAIN_DEV_NAME		"rai0"
 #define INF_MBSSID_DEV_NAME		"rai"

@@ -3,6 +3,7 @@ config WIRELESS_MT7915
 	help
 	  This driver supports MT7915 WIRELESS DRIVER
 
+
 config SUPPORT_OPENWRT
 	bool
 	default y

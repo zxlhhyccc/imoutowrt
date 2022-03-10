@@ -1,0 +1,13 @@
+diff -u -r a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi	2022-03-07 00:25:42.048713000 +0800
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi	2022-03-10 11:13:51.551230157 +0800
+@@ -725,7 +725,7 @@
+ 	};
+ 
+ 	wmac: wmac@18000000 {
+-		compatible = "mediatek,mt7622-wmac";
++		compatible = "mediatek,wbsys";
+ 		reg = <0 0x18000000 0 0x100000>;
+ 		interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_LOW>;
+ 
+
