@@ -27,6 +27,7 @@ define Package/l1profile/install
 	$(INSTALL_BIN) ./files/mt7615.2.dat $(1)/etc/wireless/mt7615/
 	$(INSTALL_BIN) ./files/mt7615.lua $(1)/lib/wifi
 	$(INSTALL_BIN) ./files/firmware.sh $(1)/etc/init.d/
+	$(INSTALL_BIN) ./files/apcli.sh $(1)/etc/init.d/
 endef
 
 

@@ -369,13 +369,12 @@ config AIR_MONITOR
 config WNM_SUPPORT
 	bool "802.11v WNM Support"
 	depends on MT_AP_SUPPORT
-	default n
+	default y
 
 config CUSTOMER_VENDOR_IE_SUPPORT
 	bool "Customer Vendor IE support"
 	depends on MT_AP_SUPPORT
-	depends on CHIP_MT7663E
-	default n
+	default y
 
 #config ROAMING_ENHANCE_SUPPORT
 #	bool "Roaming Enhance Support"

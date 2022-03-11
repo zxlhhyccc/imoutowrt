@@ -6,11 +6,10 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_NAME:=mt7622
-PKG_VERSION:=5.1.0.0
+PKG_NAME:=mt_wifi
+PKG_VERSION:=7.4.0.0
 P4REV:=8
-
-PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_NAME)_mt_wifi
+PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/$(PKG_NAME)
 PKG_KCONFIG:= \
 	AP_SUPPORT \
 	RT_FIRST_CARD \
@@ -40,6 +39,7 @@ PKG_KCONFIG:= \
 	CFG_SUPPORT_FALCON_MURU \
 	CFG_SUPPORT_FALCON_TXCMD_DBG \
 	CFG_SUPPORT_FALCON_SR \
+	CFG_SUPPORT_FALCON_PP \
 	WIFI_DRIVER \
 	G_BAND_256QAM_SUPPORT \
 	BRCM_256QAM_SUPPORT \
@@ -111,6 +111,7 @@ PKG_KCONFIG:= \
 	SUPPORT_OPENWRT \
 	SDK_USER_LIGHTY \
 	MUMIMO_SUPPORT \
+	MUMIMO_PLATFORM_PERFORMANCE_LEVEL \
 	MU_RA_SUPPORT \
 	LED_CONTROL_SUPPORT \
 	RA_HW_NAT \
@@ -141,21 +142,20 @@ PKG_KCONFIG:= \
 	DOT11K_RRM_SUPPORT \
 	DOT11R_FT_SUPPORT \
 	ENTERPRISE_AP_SUPPORT \
-	MLME_MULTI_QUEUE_SUPPORT \
+	MLME_MULTI_QUEUE_SUPPORT\
 	WIFI_EAP_FEATURE \
 	VLAN_SUPPORT \
 	TXRX_STAT_SUPPORT \
 	SNIFFER_SUPPORT \
 	ANTENNA_CONTROL_SUPPORT \
 	MGMT_TXPWR_CTRL \
-	CHUTIL_SUPPORT \
-	NF_SUPPORT \
 	RA_PHY_RATE_SUPPORT \
 	AMPDU_CONF_SUPPORT \
 	ACK_CTS_TIMEOUT_SUPPORT \
 	RADIUS_MAC_AUTH_SUPPORT \
 	DYNAMIC_VLAN_SUPPORT \
 	CUSTOMISED_HOSTAPD_SUPPORT \
+	HOSTAPD_WPA3_SUPPORT \
 	APCLI_STA_SUPPORT \
 	WDS_STA_SUPPORT \
 	MBSS_AS_WDS_AP_SUPPORT \
@@ -163,6 +163,7 @@ PKG_KCONFIG:= \
 	MAP_SUPPORT \
 	MAP_R2_VER_SUPPORT \
 	WPA3_SUPPORT \
+	DPP_SUPPORT \
 	OWE_SUPPORT \
 	WIFI_PKT_FWD_V1 \
 	FIRST_IF_MT7615E \
@@ -221,26 +222,47 @@ PKG_KCONFIG:= \
 	CTXD_SCATTER_AND_GATHER_SUPPORT \
 	SINGLE_SKU \
 	WIFI_SYSDVT \
+	WIFI_DBG_TXCMD \
 	WARP_V2 \
-	MT76XX_COMBO_DUAL_DRIVER_SUPPORT
+	OCE_SUPPORT\
+	PROFILING_SUPPORT\
+	HWIFI_SUPPORT\
 
-PKG_CONFIG_DEPENDS:=$(foreach c, $(PKG_KCONFIG),$(if $(CONFIG_MTK_APSOC_WIFI_$c),CONFIG_$(c)))
+PKG_CONFIG_DEPENDS:=$(foreach c, $(PKG_KCONFIG),$(if $(CONFIG_MTK_$c),CONFIG_$(c)))
 
 include $(INCLUDE_DIR)/package.mk
 
 
 TAR_CMD=$(HOST_TAR) -C $(1)/ $(TAR_OPTIONS)
 
-define KernelPackage/mt7622
+define KernelPackage/mt_wifi
   CATEGORY:=Kernel modules
   TITLE:=MTK wifi AP driver
-  FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/$(PKG_NAME)_mt_wifi.ko
-  AUTOLOAD:=$(call AutoProbe,mt7622_mt_wifi)
+ifneq ($(CONFIG_MTK_FAST_NAT_SUPPORT), )
+ifneq ($(CONFIG_NET_MEDIATEK_HNAT), )
+  DEPENDS+=+kmod-mediatek_hnat
+endif
+endif
+ifneq ($(CONFIG_MTK_WHNAT_SUPPORT), )
+ifneq ($(CONFIG_MTK_WARP_V2), )
+  FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/mt_wifi.ko \
+	$(PKG_BUILD_DIR)/mt_wifi/embedded/plug_in/warp_proxy/mtk_warp_proxy.ko
+  DEPENDS+=+kmod-warp
+  AUTOLOAD:=$(call AutoProbe,mt_wifi mtk_warp_proxy)
+else
+  FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/mt_wifi.ko \
+	$(PKG_BUILD_DIR)/mt_wifi/embedded/plug_in/whnat/mt_whnat.ko
+  AUTOLOAD:=$(call AutoProbe,mt_wifi mt_whnat)
+endif
+else
+  FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/mt_wifi.ko
+  AUTOLOAD:=$(call AutoProbe,mt_wifi)
+endif  
   SUBMENU:=Wireless Drivers
   MENU:=1
 endef
 
-define KernelPackage/mt7622/config
+define KernelPackage/mt_wifi/config
 	source "$(SOURCE)/config.in"
 endef
 
@@ -250,11 +272,12 @@ define Build/Compile
 		CROSS_COMPILE="$(TARGET_CROSS)" \
 		ARCH="$(LINUX_KARCH)" \
 		M="$(PKG_BUILD_DIR)/mt_wifi_ap" \
-		$(foreach c, $(PKG_KCONFIG),$(if $(CONFIG_MTK_APSOC_WIFI_$c),CONFIG_$(c)=$(CONFIG_MTK_APSOC_WIFI_$(c)))) \
+		LINUX_DIR="$(KERNEL_BUILD_DIR)" \
+		$(foreach c, $(PKG_KCONFIG),$(if $(CONFIG_MTK_$c),CONFIG_$(c)=$(CONFIG_MTK_$(c)))) \
 		modules
 endef
 
-define KernelPackage/mt7622/install
+define KernelPackage/mt_wifi/install
 endef
 
-$(eval $(call KernelPackage,mt7622))
+$(eval $(call KernelPackage,mt_wifi))

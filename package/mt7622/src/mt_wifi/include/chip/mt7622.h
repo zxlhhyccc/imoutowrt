@@ -44,7 +44,7 @@ struct _RTMP_CHIP_DBG;
 /* Device ID & Vendor ID, these values should match EEPROM value */
 /* */
 
-#define OF_WBSYS_NAME "mediatek,wbsys"
+#define OF_WBSYS_NAME "mediatek,mt7622-wmac"
 #define RTMP_MAC_CSR_ADDR 0x18000000
 #define RTMP_IRQ_NUM 244
 #define RTMP_MAC_CSR_LEN 0x100000

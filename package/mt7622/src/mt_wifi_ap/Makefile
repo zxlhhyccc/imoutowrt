@@ -272,9 +272,9 @@ ifeq ($(CONFIG_WSC_INCLUDED),y)
         EXTRA_CFLAGS += -DWSC_AP_SUPPORT
     endif
 
-    ifneq ($(CONFIG_MT_STA_SUPPORT),)
-        EXTRA_CFLAGS += -DWSC_STA_SUPPORT
-    endif
+   
+        
+    
 
     spec_objs += $(SRC_EMBEDDED_DIR)/common/wsc.o\
                     $(SRC_EMBEDDED_DIR)/common/wsc_tlv.o\
@@ -903,10 +903,10 @@ ifeq ($(CONFIG_WLAN_HOOK),y)
 	os_objs += $(SRC_DIR)/os/linux/rt_txrx_hook.o
 endif
 
-ifeq ($(CONFIG_MULTI_INF_SUPPORT),y)
+
     EXTRA_CFLAGS += -DMULTI_INF_SUPPORT
     os_objs += $(SRC_DIR)/os/linux/multi_main_dev.o
-endif
+
 
 ifeq ($(CONFIG_WIFI_WORK_QUEUE_BH),y)
     EXTRA_CFLAGS += -DWORKQUEUE_BH
