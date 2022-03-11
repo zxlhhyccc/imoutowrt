@@ -121,9 +121,9 @@ endif
 # support built-in/ko for Openwrt/Linux SDK
 obj-m += $(DRV_NAME).o
 
-ifeq ($(CONFIG_MTK_EMI_7622),y)
+
 EXTRA_CFLAGS += -DCONFIG_ARCH_MT7622
-endif
+
 
 ifeq ($(CONFIG_COLGIN_MT6890),y)
 EXTRA_CFLAGS += -DCONFIG_COLGIN_MT6890
