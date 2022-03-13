@@ -54,9 +54,9 @@ DEFAULT_PACKAGES.nas:=\
 # For router targets
 DEFAULT_PACKAGES.router:=\
 	dnsmasq-full \
-	firewall4 \
-	nftables \
-	kmod-nft-offload \
+	firewall \
+	iptables-zz-legacy \
+	kmod-ipt-offload \
 	ipv6helper \
 	ppp \
 	ppp-mod-pppoe
@@ -65,8 +65,7 @@ DEFAULT_PACKAGES.tweak:=\
 	autocore \
 	block-mount \
 	default-settings-chn \
-	iptables-nft \
-	ip6tables-nft \
+	kmod-ipt-raw \
 	kmod-nf-nathelper \
 	kmod-nf-nathelper-extra \
 	luci \
@@ -108,7 +107,7 @@ else
 endif
 
 # Add tweaked packages
-# DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.tweak)
+DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.tweak)
 
 # Add device specific packages (here below to allow device type set from subtarget)
 DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.$(DEVICE_TYPE))
