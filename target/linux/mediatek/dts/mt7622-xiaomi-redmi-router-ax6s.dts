@@ -98,6 +98,15 @@
  		};
  	};
 
+	pcie1_pins: pcie1-pins {
+		mux {
+			function = "pcie";
+			groups = "pcie1_pad_perst",
+				 "pcie1_0_waken",
+				 "pcie1_0_clkreq";
+		};
+	};
+
  	pmic_bus_pins: pmic-bus-pins {
  		mux {
  			function = "pmic";
@@ -308,10 +317,23 @@
 	status = "okay";
 };
 
-&slot0 {
+&pcie1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie1_pins>;
 	status = "okay";
-
 };
+
+&slot0 {
+ 	status = "okay";
+
+ 	wifi@0,0 {
+ 		compatible = "mediatek,mt76";
+ 		reg = <0x0000 0 0 0 0>;
+ 		mediatek,mtd-eeprom = <&factory 0x5000>;
+ 		ieee80211-freq-limit = <5000000 6000000>;
+ 	};
+ };
+
 
  &pwm {
  	pinctrl-names = "default";

@@ -94,10 +94,43 @@ define Build/zytrx-header
 	mv $@.new $@
 endef
 
+RELOCATE_LOADADDR = 0x81000000
+
+define Build/fit-relocate
+	$(TOPDIR)/scripts/mkits.sh \
+		-D $(DEVICE_NAME) -o $@.its -k $@ \
+		$(if $(word 2,$(1)),-d $(word 2,$(1))) -C $(word 1,$(1)) \
+		$(if $(word 3,$(1)),-r $(IMAGE_ROOTFS) -f $(subst _,$(comma),$(DEVICE_NAME))) \
+		-a $(RELOCATE_LOADADDR) -e $(RELOCATE_LOADADDR) \
+		$(if $(DEVICE_FDT_NUM),-n $(DEVICE_FDT_NUM)) \
+		-c $(if $(DEVICE_DTS_CONFIG),$(DEVICE_DTS_CONFIG),"config-1") \
+		-A $(LINUX_KARCH) -v $(LINUX_VERSION)
+	PATH=$(LINUX_DIR)/scripts/dtc:$(PATH) mkimage $(if $(word 3,$(1)),-E -B 0x1000 -p 0x1000) -f $@.its $@.new
+	@mv $@.new $@
+endef
+
 define Device/dsa-migration
   DEVICE_COMPAT_VERSION := 1.1
   DEVICE_COMPAT_MESSAGE := Config cannot be migrated from swconfig to DSA
 endef
+
+define Device/actiontec_web7200
+  $(Device/dsa-migration)
+  DEVICE_VENDOR := Actiontec
+  DEVICE_MODEL := EB7200
+  DEVICE_PACKAGES += kmod-mt7603 kmod-mt7915e kmod-usb3 uboot-envtools kmod-i2c-core
+  LOADER_TYPE := bin
+  KERNEL_SIZE := 4096k
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  UBINIZE_OPTS := -E 5
+  KERNEL_INITRAMFS := kernel-bin | lzma | loader-kernel | gzip | fit-relocate gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL := kernel-bin | relocate-kernel | lzma | fit-relocate lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  IMAGES += factory.bin
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-ubi
+endef
+TARGET_DEVICES += actiontec_web7200
 
 define Device/adslr_g7
   $(Device/dsa-migration)
@@ -429,6 +462,16 @@ define Device/dlink_dir-x1860
   IMAGE_SIZE := 40960k
 endef
 TARGET_DEVICES += dlink_dir-x1860
+
+define Device/dual-q_h721
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  IMAGE_SIZE := 16064k
+  DEVICE_VENDOR := Dual-Q
+  DEVICE_MODEL := H721
+  DEVICE_PACKAGES := kmod-ata-ahci kmod-sdhci-mt7620 kmod-usb3 -wpad-basic-wolfssl
+endef
+TARGET_DEVICES += dual-q_h721
 
 define Device/d-team_newifi-d2
   $(Device/dsa-migration)
@@ -1394,6 +1437,17 @@ define Device/raisecom_msg1500-x-00
 endef
 TARGET_DEVICES += raisecom_msg1500-x-00
 
+define Device/renkforce_ws-wn530hp3-a
+  $(Device/dsa-migration)
+  DEVICE_VENDOR := Renkforce
+  DEVICE_MODEL := WS-WN530HP3-A
+  DEVICE_PACKAGES += kmod-mt7603 kmod-mt7615e kmod-mt7663-firmware-ap
+  IMAGE/sysupgrade.bin := append-kernel | pad-to 65536 | append-rootfs | \
+	check-size | append-metadata
+  IMAGE_SIZE := 15040k
+endef
+TARGET_DEVICES += renkforce_ws-wn530hp3-a
+
 define Device/samknows_whitebox-v8
   $(Device/dsa-migration)
   IMAGE_SIZE := 16064k
@@ -1534,6 +1588,19 @@ define Device/tplink_eap235-wall-v1
 endef
 TARGET_DEVICES += tplink_eap235-wall-v1
 
+define Device/tplink_eap615-wall-v1
+  $(Device/dsa-migration)
+  $(Device/tplink-safeloader)
+  DEVICE_MODEL := EAP615-Wall
+  DEVICE_VARIANT := v1
+  DEVICE_PACKAGES := kmod-mt7915e
+  TPLINK_BOARD_ID := EAP615-WALL-V1
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb | pad-to 64k
+  KERNEL_INITRAMFS := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd
+  IMAGE_SIZE := 13248k
+endef
+TARGET_DEVICES += tplink_eap615-wall-v1
+
 define Device/tplink_re350-v1
   $(Device/dsa-migration)
   $(Device/tplink-safeloader)
@@ -1567,6 +1634,17 @@ define Device/tplink_re650-v1
   IMAGE_SIZE := 14208k
 endef
 TARGET_DEVICES += tplink_re650-v1
+
+define Device/tplink_tl-wpa8631p-v3
+  $(Device/dsa-migration)
+  $(Device/tplink-safeloader)
+  DEVICE_MODEL := TL-WPA8631P
+  DEVICE_VARIANT := v3
+  DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615e kmod-mt7663-firmware-ap
+  TPLINK_BOARD_ID := TL-WPA8631P-V3
+  IMAGE_SIZE := 7232k
+endef
+TARGET_DEVICES += tplink_tl-wpa8631p-v3
 
 define Device/ubnt_edgerouter_common
   $(Device/dsa-migration)
@@ -1930,6 +2008,18 @@ define Device/zbtlink_zbt-wg1602-16m
 	kmod-usb-ledtrig-usbport
 endef
 TARGET_DEVICES += zbtlink_zbt-wg1602-16m
+
+define Device/zbtlink_zbt-wg1608-16m
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  IMAGE_SIZE := 16064k
+  DEVICE_VENDOR := Zbtlink
+  DEVICE_MODEL := ZBT-WG1608
+  DEVICE_VARIANT := 16M
+  DEVICE_PACKAGES := kmod-sdhci-mt7620 kmod-mt7603 kmod-mt7615e \
+	kmod-mt7663-firmware-ap kmod-usb3 kmod-usb-ledtrig-usbport
+endef
+TARGET_DEVICES += zbtlink_zbt-wg1608-16m
 
 define Device/zbtlink_zbt-wg2626
   $(Device/dsa-migration)
