@@ -6,11 +6,7 @@ PKG_RELEASE=4
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=
 
-PKG_SOURCE_URL:=https://github.com/meisreallyba/mt76
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2022-03-15
-PKG_SOURCE_VERSION:=2d58ee1b5a66e64d726d31fa52b905a8affd692c
-PKG_MIRROR_HASH:=
+PKG_VERSION:=wed
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 PKG_USE_NINJA:=0
@@ -491,4 +487,3 @@ $(eval $(call KernelPackage,mt7921s))
 $(eval $(call KernelPackage,mt7921e))
 $(eval $(call KernelPackage,mt76))
 $(eval $(call BuildPackage,mt76-test))
-
