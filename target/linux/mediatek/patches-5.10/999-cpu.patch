@@ -1,0 +1,24 @@
+diff -u -r a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi	2022-03-19 21:19:35.610096000 +0800
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi	2022-03-19 21:25:27.753263230 +0800
+@@ -60,7 +60,7 @@
+ 
+ 		opp-1350000000 {
+ 			opp-hz = /bits/ 64 <1350000000>;
+-			opp-microvolt = <1310000>;
++			opp-microvolt = <1350000>;
+ 		};
+ 	};
+ 
+diff -u -r a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c	2022-03-19 21:19:35.606096000 +0800
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c	2022-03-20 21:59:19.777700832 +0800
+@@ -2568,7 +2568,7 @@
+ 		return 0;
+ 	}
+ 
+-	/* Non-MT7628 handling... */
++	ethsys_reset(eth, RSTCTRL_ETH);
+ 	ethsys_reset(eth, RSTCTRL_FE);
+ 	ethsys_reset(eth, RSTCTRL_PPE);
+ 
