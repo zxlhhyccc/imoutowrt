@@ -1,14 +1,36 @@
 diff -u -r a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi	2022-03-19 21:19:35.610096000 +0800
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi	2022-03-19 21:25:27.753263230 +0800
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi	2022-03-23 15:25:32.460007138 +0800
 @@ -60,7 +60,7 @@
  
  		opp-1350000000 {
  			opp-hz = /bits/ 64 <1350000000>;
 -			opp-microvolt = <1310000>;
-+			opp-microvolt = <1350000>;
++			opp-microvolt = <1310000>;
  		};
  	};
+ 
+@@ -364,7 +364,7 @@
+ 		};
+ 
+ 		cci_control2: slave-if@5000 {
+-			compatible = "arm,cci-400-ctrl-if", "syscon";
++			compatible = "arm,cci-400-ctrl-if";
+ 			interface-type = "ace";
+ 			reg = <0x5000 0x1000>;
+ 		};
+@@ -1008,11 +1008,9 @@
+ 		power-domains = <&scpsys MT7622_POWER_DOMAIN_ETHSYS>;
+ 		mediatek,ethsys = <&ethsys>;
+ 		mediatek,sgmiisys = <&sgmiisys>;
+-		mediatek,cci-control = <&cci_control2>;
+ 		mediatek,wed = <&wed0>, <&wed1>;
+ 		mediatek,pcie-mirror = <&pcie_mirror>;
+ 		mediatek,hifsys = <&hifsys>;
+-		dma-coherent;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "disabled";
  
 diff -u -r a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c	2022-03-19 21:19:35.606096000 +0800
