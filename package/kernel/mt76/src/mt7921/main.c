@@ -293,7 +293,7 @@ static int mt7921_add_interface(struct ieee80211_hw *hw,
 
 	mt7921_mutex_acquire(dev);
 
-	mvif->mt76.idx = ffs(~dev->mt76.vif_mask) - 1;
+	mvif->mt76.idx = __ffs64(~dev->mt76.vif_mask);
 	if (mvif->mt76.idx >= MT7921_MAX_INTERFACES) {
 		ret = -ENOSPC;
 		goto out;
@@ -309,7 +309,7 @@ static int mt7921_add_interface(struct ieee80211_hw *hw,
 	if (ret)
 		goto out;
 
-	dev->mt76.vif_mask |= BIT(mvif->mt76.idx);
+	dev->mt76.vif_mask |= BIT_ULL(mvif->mt76.idx);
 	phy->omac_mask |= BIT_ULL(mvif->mt76.omac_idx);
 
 	idx = MT7921_WTBL_RESERVED - mvif->mt76.idx;
@@ -329,7 +329,7 @@ static int mt7921_add_interface(struct ieee80211_hw *hw,
 	rcu_assign_pointer(dev->mt76.wcid[idx], &mvif->sta.wcid);
 	if (vif->txq) {
 		mtxq = (struct mt76_txq *)vif->txq->drv_priv;
-		mtxq->wcid = &mvif->sta.wcid;
+		mtxq->wcid = idx;
 	}
 
 out:
@@ -353,7 +353,7 @@ static void mt7921_remove_interface(struct ieee80211_hw *hw,
 
 	rcu_assign_pointer(dev->mt76.wcid[idx], NULL);
 
-	dev->mt76.vif_mask &= ~BIT(mvif->mt76.idx);
+	dev->mt76.vif_mask &= ~BIT_ULL(mvif->mt76.idx);
 	phy->omac_mask &= ~BIT_ULL(mvif->mt76.omac_idx);
 	mt7921_mutex_release(dev);
 
@@ -484,9 +484,17 @@ mt7921_sniffer_interface_iter(void *priv, u8 *mac, struct ieee80211_vif *vif)
 {
 	struct mt7921_dev *dev = priv;
 	struct ieee80211_hw *hw = mt76_hw(dev);
-	bool enabled = !!(hw->conf.flags & IEEE80211_CONF_MONITOR);
+	struct mt76_connac_pm *pm = &dev->pm;
+	bool monitor = !!(hw->conf.flags & IEEE80211_CONF_MONITOR);
 
-	mt7921_mcu_set_sniffer(dev, vif, enabled);
+	mt7921_mcu_set_sniffer(dev, vif, monitor);
+	pm->enable = pm->enable_user && !monitor;
+	pm->ds_enable = pm->ds_enable_user && !monitor;
+
+	mt76_connac_mcu_set_deep_sleep(&dev->mt76, pm->ds_enable);
+
+	if (monitor)
+		mt7921_mcu_set_beacon_filter(dev, vif, false);
 }
 
 void mt7921_set_runtime_pm(struct mt7921_dev *dev)
@@ -530,7 +538,6 @@ static int mt7921_config(struct ieee80211_hw *hw, u32 changed)
 						    IEEE80211_IFACE_ITER_RESUME_ALL,
 						    mt7921_sniffer_interface_iter, dev);
 		dev->mt76.rxfilter = mt76_rr(dev, MT_WF_RFCR(0));
-		mt7921_set_runtime_pm(dev);
 	}
 
 out:
@@ -558,7 +565,6 @@ static void mt7921_configure_filter(struct ieee80211_hw *hw,
 				    u64 multicast)
 {
 	struct mt7921_dev *dev = mt7921_hw_dev(hw);
-	struct mt7921_phy *phy = mt7921_hw_phy(hw);
 	u32 ctl_flags = MT_WF_RFCR1_DROP_ACK |
 			MT_WF_RFCR1_DROP_BF_POLL |
 			MT_WF_RFCR1_DROP_BA |
@@ -568,23 +574,23 @@ static void mt7921_configure_filter(struct ieee80211_hw *hw,
 
 #define MT76_FILTER(_flag, _hw) do {					\
 		flags |= *total_flags & FIF_##_flag;			\
-		phy->rxfilter &= ~(_hw);				\
-		phy->rxfilter |= !(flags & FIF_##_flag) * (_hw);	\
+		dev->mt76.rxfilter &= ~(_hw);				\
+		dev->mt76.rxfilter |= !(flags & FIF_##_flag) * (_hw);	\
 	} while (0)
 
 	mt7921_mutex_acquire(dev);
 
-	phy->rxfilter &= ~(MT_WF_RFCR_DROP_OTHER_BSS |
-			   MT_WF_RFCR_DROP_OTHER_BEACON |
-			   MT_WF_RFCR_DROP_FRAME_REPORT |
-			   MT_WF_RFCR_DROP_PROBEREQ |
-			   MT_WF_RFCR_DROP_MCAST_FILTERED |
-			   MT_WF_RFCR_DROP_MCAST |
-			   MT_WF_RFCR_DROP_BCAST |
-			   MT_WF_RFCR_DROP_DUPLICATE |
-			   MT_WF_RFCR_DROP_A2_BSSID |
-			   MT_WF_RFCR_DROP_UNWANTED_CTL |
-			   MT_WF_RFCR_DROP_STBC_MULTI);
+	dev->mt76.rxfilter &= ~(MT_WF_RFCR_DROP_OTHER_BSS |
+				MT_WF_RFCR_DROP_OTHER_BEACON |
+				MT_WF_RFCR_DROP_FRAME_REPORT |
+				MT_WF_RFCR_DROP_PROBEREQ |
+				MT_WF_RFCR_DROP_MCAST_FILTERED |
+				MT_WF_RFCR_DROP_MCAST |
+				MT_WF_RFCR_DROP_BCAST |
+				MT_WF_RFCR_DROP_DUPLICATE |
+				MT_WF_RFCR_DROP_A2_BSSID |
+				MT_WF_RFCR_DROP_UNWANTED_CTL |
+				MT_WF_RFCR_DROP_STBC_MULTI);
 
 	MT76_FILTER(OTHER_BSS, MT_WF_RFCR_DROP_OTHER_TIM |
 			       MT_WF_RFCR_DROP_A3_MAC |
@@ -598,7 +604,7 @@ static void mt7921_configure_filter(struct ieee80211_hw *hw,
 			     MT_WF_RFCR_DROP_NDPA);
 
 	*total_flags = flags;
-	mt76_wr(dev, MT_WF_RFCR(0), phy->rxfilter);
+	mt76_wr(dev, MT_WF_RFCR(0), dev->mt76.rxfilter);
 
 	if (*total_flags & FIF_CONTROL)
 		mt76_clear(dev, MT_WF_RFCR1(0), ctl_flags);

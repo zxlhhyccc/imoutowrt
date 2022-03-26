@@ -5,7 +5,8 @@
 #include "../dma.h"
 #include "mac.h"
 
-int mt7915_init_tx_queues(struct mt7915_phy *phy, int idx, int n_desc, int ring_base)
+static int
+mt7915_init_tx_queues(struct mt7915_phy *phy, int idx, int n_desc, int ring_base)
 {
 	struct mt7915_dev *dev = phy->dev;
 	int i, err;
@@ -338,7 +339,7 @@ static int mt7915_dma_enable(struct mt7915_dev *dev)
 	return 0;
 }
 
-int mt7915_dma_init(struct mt7915_dev *dev)
+int mt7915_dma_init(struct mt7915_dev *dev, struct mt7915_phy *phy2)
 {
 	struct mt76_dev *mdev = &dev->mt76;
 	u32 wa_rx_base, wa_rx_idx;
@@ -372,6 +373,15 @@ int mt7915_dma_init(struct mt7915_dev *dev)
 				    MT_TXQ_RING_BASE(0));
 	if (ret)
 		return ret;
+
+	if (phy2) {
+		ret = mt7915_init_tx_queues(phy2,
+					    MT_TXQ_ID(phy2->band_idx),
+					    MT7915_TX_RING_SIZE,
+					    MT_TXQ_RING_BASE(1));
+		if (ret)
+			return ret;
+	}
 
 	/* command to WM */
 	ret = mt76_init_mcu_queue(&dev->mt76, MT_MCUQ_WM,

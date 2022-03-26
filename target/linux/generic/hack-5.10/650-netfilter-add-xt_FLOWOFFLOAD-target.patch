@@ -325,9 +325,9 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
 +
 +static bool flow_is_valid_ether_device(const struct net_device *dev)
 +{
-+	
-+	    
-+		
++	if (!dev || (dev->flags & IFF_LOOPBACK) 
++	   )
++		return false;
 +
 +	return true;
 +}
@@ -354,8 +354,8 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
 +	if (route->tuple[dir].xmit_type == FLOW_OFFLOAD_XMIT_XFRM)
 +		return;
 +
-+	
-+	    
++	if (dev->flags & IFF_LOOPBACK)
++	    	return;
 +	    
 +		
 +

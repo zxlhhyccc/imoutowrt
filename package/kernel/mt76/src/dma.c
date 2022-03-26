@@ -49,7 +49,7 @@ mt76_alloc_txwi(struct mt76_dev *dev)
 	int size;
 
 	size = L1_CACHE_ALIGN(dev->drv->txwi_size + sizeof(*t));
-	txwi = devm_kzalloc(dev->dev, size, GFP_ATOMIC);
+	txwi = kzalloc(size, GFP_ATOMIC);
 	if (!txwi)
 		return NULL;
 
@@ -106,9 +106,11 @@ mt76_free_pending_txwi(struct mt76_dev *dev)
 	struct mt76_txwi_cache *t;
 
 	local_bh_disable();
-	while ((t = __mt76_get_txwi(dev)) != NULL)
+	while ((t = __mt76_get_txwi(dev)) != NULL) {
 		dma_unmap_single(dev->dma_dev, t->dma_addr, dev->drv->txwi_size,
 				 DMA_TO_DEVICE);
+		kfree(mt76_get_txwi_ptr(dev, t));
+	}
 	local_bh_enable();
 }
 
@@ -313,7 +315,9 @@ static void
 mt76_dma_tx_cleanup(struct mt76_dev *dev, struct mt76_queue *q, bool flush)
 {
 	struct mt76_queue_entry entry;
+	int done = 0;
 	int last;
+	int tail;
 
 	if (!q || !q->ndesc)
 		return;
@@ -324,20 +328,38 @@ mt76_dma_tx_cleanup(struct mt76_dev *dev, struct mt76_queue *q, bool flush)
 	else
 		last = Q_READ(dev, q, dma_idx);
 
-	while (q->queued > 0 && q->tail != last) {
+	tail = q->tail;
+	while (q->queued - done > 0 && tail != last) {
 		mt76_dma_tx_cleanup_idx(dev, q, q->tail, &entry);
-		mt76_queue_tx_complete(dev, q, &entry);
+		if (entry.skb)
+			dev->drv->tx_complete_skb(dev, &entry);
+		tail = (tail + 1) % q->ndesc;
+		done++;
 
 		if (entry.txwi) {
 			if (!(dev->drv->drv_flags & MT_DRV_TXWI_NO_FREE))
 				mt76_put_txwi(dev, entry.txwi);
 		}
 
-		if (!flush && q->tail == last)
+		if (!flush && tail == last)
 			last = Q_READ(dev, q, dma_idx);
 
+		if (done > 16) {
+			spin_lock_bh(&q->lock);
+			q->queued -= done;
+			q->tail = tail;
+			spin_unlock_bh(&q->lock);
+			done = 0;
+		}
 	}
 	spin_unlock_bh(&q->cleanup_lock);
+
+	if (done) {
+		spin_lock_bh(&q->lock);
+		q->queued -= done;
+		q->tail = tail;
+		spin_unlock_bh(&q->lock);
+	}
 
 	if (flush) {
 		spin_lock_bh(&q->lock);

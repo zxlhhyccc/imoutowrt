@@ -11,6 +11,7 @@ static unsigned long mt76_aggr_tid_to_timeo(u8 tidno)
 	 * for non AC_BK/AC_BE and set smaller timeout for it. */
 	return HZ / (tidno >= 4 ? 25 : 10);
 }
+
 static void
 mt76_aggr_release(struct mt76_rx_tid *tid, struct sk_buff_head *frames, int idx)
 {

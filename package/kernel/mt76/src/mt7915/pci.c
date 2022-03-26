@@ -14,7 +14,6 @@
 
 static bool wed_enable = true;
 
-
 static LIST_HEAD(hif_list);
 static DEFINE_SPINLOCK(hif_lock);
 static u32 hif_idx;
