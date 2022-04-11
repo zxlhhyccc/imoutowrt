@@ -13,6 +13,7 @@
 #include "../trace.h"
 
 static bool wed_enable = true;
+module_param(wed_enable, bool, 0644);
 
 static LIST_HEAD(hif_list);
 static DEFINE_SPINLOCK(hif_lock);
@@ -195,7 +196,8 @@ static int mt7915_pci_probe(struct pci_dev *pdev,
 		return PTR_ERR(dev);
 
 	mdev = &dev->mt76;
-	dev->mt76.dma_dev = &pdev->dev;
+	mt7915_wfsys_reset(dev);
+	hif2 = mt7915_pci_init_hif2(pdev);
 
 	ret = mt7915_pci_wed_init(dev, pdev, &irq);
 	if (ret < 0)
