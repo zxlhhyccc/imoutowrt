@@ -11,9 +11,8 @@ linksys,e8450-ubi)
 	ucidef_set_led_netdev "wan" "WAN" "inet:blue" "wan"
 	;;
 xiaomi,redmi-router-ax6s)
-ucidef_set_led_netdev "wan" "WAN" "blue:net" "wan"
- 	;;
-
+	ucidef_set_led_netdev "wan" "eth1" "blue:net" "eth1"
+	;;
 esac
 
 board_config_flush

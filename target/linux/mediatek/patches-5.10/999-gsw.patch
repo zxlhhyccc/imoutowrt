@@ -19,3 +19,4 @@ diff -u -r a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
  obj-$(CONFIG_VITESSE_PHY)	+= vitesse.o
  obj-$(CONFIG_XILINX_GMII2RGMII) += xilinx_gmii2rgmii.o
 +obj-$(CONFIG_MT753X_GSW)        += mtk/mt753x/
+

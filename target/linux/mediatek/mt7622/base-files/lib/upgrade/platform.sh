@@ -46,7 +46,7 @@ platform_do_upgrade() {
 		;;
 	mediatek,mt7622-rfb1-ubi|\
 	totolink,a8000ru|\
- 	xiaomi,redmi-router-ax6s)
+	xiaomi,redmi-router-ax6s)
 		nand_do_upgrade "$1"
 		;;
 	*)
@@ -69,7 +69,7 @@ platform_check_image() {
 		;;
 	mediatek,mt7622-rfb1-ubi|\
 	totolink,a8000ru|\
- 	xiaomi,redmi-router-ax6s)
+	xiaomi,redmi-router-ax6s)
 		nand_do_platform_check "$board" "$1"
 		;;
 	*)
