@@ -337,7 +337,7 @@ int mt7615_set_channel(struct mt7615_phy *phy)
 		goto out;
 
 	mt7615_mac_cca_stats_reset(phy);
-	ret = mt7615_mcu_set_sku_en(phy, true);
+	ret = mt7615_mcu_set_sku_en(phy, false);
 	if (ret)
 		goto out;
 
