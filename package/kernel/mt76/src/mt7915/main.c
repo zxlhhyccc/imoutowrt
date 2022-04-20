@@ -701,6 +701,10 @@ void mt7915_mac_sta_remove(struct mt76_dev *mdev, struct ieee80211_vif *vif,
 	if (!list_empty(&msta->rc_list))
 		list_del_init(&msta->rc_list);
 	spin_unlock_bh(&dev->sta_poll_lock);
+	spin_lock_bh(&mdev->status_lock);
+	if (!list_empty(&msta->wcid.list))
+		list_del_init(&msta->wcid.list);
+	spin_unlock_bh(&mdev->status_lock);
 }
 
 static void mt7915_tx(struct ieee80211_hw *hw,
