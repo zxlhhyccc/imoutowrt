@@ -166,7 +166,9 @@ void mt76_rx_aggr_reorder(struct sk_buff *skb, struct sk_buff_head *frames)
 		mt76_rx_aggr_check_ctl(skb, frames);
 		return;
 	}
-
+	if (!status->aggr)
+	return
+	
 	/* not part of a BA session */
 	ackp = status->qos_ctl & IEEE80211_QOS_CTL_ACK_POLICY_MASK;
 	if (ackp != IEEE80211_QOS_CTL_ACK_POLICY_BLOCKACK &&
