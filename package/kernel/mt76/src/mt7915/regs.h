@@ -159,7 +159,7 @@ enum offs_rev {
 #define MT_MDP_DCR1_MAX_RX_LEN		GENMASK(15, 3)
 
 #define MT_MDP_DCR2			MT_MDP(0x0e8)
-#define MT_MDP_DCR2_RX_TRANS_SHORT		BIT(2)
+#define MT_MDP_DCR2_RX_TRANS_SHORT	BIT(2)
 
 #define MT_MDP_BNRCFR0(_band)		MT_MDP(__OFFS(MDP_BNRCFR0) + \
 					       ((_band) << 8))

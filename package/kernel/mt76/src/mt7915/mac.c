@@ -674,10 +674,9 @@ mt7915_mac_fill_rx(struct mt7915_dev *dev, struct sk_buff *skb)
 		u32 v2 = le32_to_cpu(rxd[2]);
 
 		fc = cpu_to_le16(FIELD_GET(MT_RXD6_FRAME_CONTROL, v0));
+		
 		seq_ctrl = FIELD_GET(MT_RXD8_SEQ_CTRL, v2);
 		qos_ctl = FIELD_GET(MT_RXD8_QOS_CTL, v2) & IEEE80211_QOS_CTL_TID_MASK;
-
-
 		rxd += 4;
 		if ((u8 *)rxd - skb->data >= skb->len)
 			return -EINVAL;
@@ -838,7 +837,6 @@ mt7915_mac_fill_rx(struct mt7915_dev *dev, struct sk_buff *skb)
 	if (!status->wcid || !ieee80211_is_data_qos(fc))
 		return 0;
 
-	
 	status->aggr = unicast &&
 		       !ieee80211_is_qos_nullfunc(fc);
 	status->qos_ctl = qos_ctl;
@@ -1018,6 +1016,7 @@ mt7915_mac_write_txwi_8023(struct mt7915_dev *dev, __le32 *txwi,
 
 	u8 tid = skb->priority & IEEE80211_QOS_CTL_TID_MASK;
 	u8 fc_type, fc_stype;
+	u16 ethertype;
 	bool wmm = false;
 	u32 val;
 
@@ -1031,7 +1030,8 @@ mt7915_mac_write_txwi_8023(struct mt7915_dev *dev, __le32 *txwi,
 	val = FIELD_PREP(MT_TXD1_HDR_FORMAT, MT_HDR_FORMAT_802_3) |
 	      FIELD_PREP(MT_TXD1_TID, tid);
 
-	if (be16_to_cpu(skb->protocol) >= ETH_P_802_3_MIN)
+	ethertype = get_unaligned_be16(&skb->data[12]);
+	if (ethertype >= ETH_P_802_3_MIN)
 		val |= MT_TXD1_ETH_802_3;
 
 	txwi[1] |= cpu_to_le32(val);
@@ -2701,7 +2701,7 @@ void mt7915_mac_add_twt_setup(struct ieee80211_hw *hw,
 	enum ieee80211_twt_setup_cmd sta_setup_cmd;
 	struct mt7915_dev *dev = mt7915_hw_dev(hw);
 	struct mt7915_twt_flow *flow;
-	int flowid, table_id, i;
+	int flowid, table_id;
 	u8 exp;
 
 	if (mt7915_mac_check_twt_req(twt))
@@ -2722,18 +2722,7 @@ void mt7915_mac_add_twt_setup(struct ieee80211_hw *hw,
 	table_id = ffs(~dev->twt.table_mask) - 1;
 	exp = FIELD_GET(IEEE80211_TWT_REQTYPE_WAKE_INT_EXP, req_type);
 	sta_setup_cmd = FIELD_GET(IEEE80211_TWT_REQTYPE_SETUP_CMD, req_type);
-	for (i = 0; i < 8; i++) {
-		if (msta->twt.flowid_mask & BIT(i)) {
-			flow = &msta->twt.flow[i];
-			if (flow->duration == twt_agrt->min_twt_dur &&
-			    flow->mantissa == twt_agrt->mantissa &&
-			    flow->exp == exp &&
-			    flow->protection == !!(req_type & IEEE80211_TWT_REQTYPE_PROTECTION) &&
-			    flow->flowtype == !!(req_type & IEEE80211_TWT_REQTYPE_FLOWTYPE) &&
-			    flow->trigger == !!(req_type & IEEE80211_TWT_REQTYPE_TRIGGER))
-				goto unlock;
-		}
-	}
+
 	flow = &msta->twt.flow[flowid];
 	memset(flow, 0, sizeof(*flow));
 	INIT_LIST_HEAD(&flow->list);

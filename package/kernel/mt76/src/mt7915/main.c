@@ -42,10 +42,6 @@ static int mt7915_start(struct ieee80211_hw *hw)
 		if (ret)
 			goto out;
 
-		ret = mt7915_mcu_set_scs(dev, 0, true);
-		if (ret)
-			goto out;
-
 		mt7915_mac_enable_nf(dev, 0);
 	}
 
@@ -58,10 +54,6 @@ static int mt7915_start(struct ieee80211_hw *hw)
 		if (ret)
 			goto out;
 
-		ret = mt7915_mcu_set_scs(dev, 1, true);
-		if (ret)
-			goto out;
-
 		mt7915_mac_enable_nf(dev, 1);
 	}
 
@@ -70,7 +62,7 @@ static int mt7915_start(struct ieee80211_hw *hw)
 	if (ret)
 		goto out;
 
-	ret = mt7915_mcu_set_sku_en(phy, false);
+	ret = mt7915_mcu_set_sku_en(phy, true);
 	if (ret)
 		goto out;
 
