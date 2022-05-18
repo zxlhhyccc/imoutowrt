@@ -16,6 +16,6 @@ DEFAULT_PACKAGES += \
 	kmod-leds-gpio kmod-gpio-button-hotplug \
 	ath11k-firmware-ipq8074 kmod-ath11k-ahb \
 	wpad-basic-wolfssl uboot-envtools \
-	kmod-qca-nss-dp qca-ssdk-shell
+	kmod-qca-nss-dp qca-ssdk-shell nss-firmware-ipq8074
 
 $(eval $(call BuildTarget))
