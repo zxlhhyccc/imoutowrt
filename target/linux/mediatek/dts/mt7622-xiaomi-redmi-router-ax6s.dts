@@ -34,7 +34,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 	};
-
+	
 	leds {
 		compatible = "gpio-leds";
 
@@ -105,6 +105,15 @@
 		};
 	};
 
+	pcie1_pins: pcie1-pins {
+		mux {
+			function = "pcie";
+			groups = "pcie1_pad_perst",
+				 "pcie1_0_waken",
+				 "pcie1_0_clkreq";
+		};
+	};
+
 	pmic_bus_pins: pmic-bus-pins {
 		mux {
 			function = "pmic";
@@ -143,8 +152,6 @@
 };
 
  &eth {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&eth_pins>;
  	status = "okay";
 
  	gmac0: mac@0 {
@@ -164,6 +171,26 @@
  		};
  	};
  	
+ 	gmac1: mac@1 {
+  		compatible = "mediatek,eth-mac";
+  		reg = <1>;
+  		
+  		phy-connection-type = "rgmii";
+
+  		nvmem-cells = <&macaddr_factory_4>;
+  		nvmem-cell-names = "mac-address";
+  		mac-address-increment = <(-2)>;
+
+  		fixed-link {
+  			speed = <1000>;
+  			full-duplex;
+  			pause;
+  		};
+	};
+	
+	
+
+ 	
  	mdio:mdio-bus {
  		#address-cells = <1>;
  		#size-cells = <0>;
@@ -172,22 +199,41 @@
 
 &gsw {
 	mediatek,mdio = <&mdio>;
-	mediatek,portmap = "wllll";
-	mediatek,mdio_master_pinmux = <0>;
+	mediatek,portmap = "lwlll";
+	mediatek,mdio_master_pinmux = <2>;
 	reset-gpios = <&pio 54 0>;
 	interrupt-parent = <&pio>;
-	interrupts = <53 IRQ_TYPE_LEVEL_HIGH>;
+	interrupts = <53 IRQ_TYPE_LEVEL_HIGH>,<77 IRQ_TYPE_EDGE_FALLING>;
 	status = "okay";
 
-	port6: port@6 {
-		compatible = "mediatek,mt753x-port";
-		reg = <6>;
-		phy-mode = "sgmii";
-		fixed-link {
-			speed = <2500>;
-			full-duplex;
-		};
-	};
+	port5: port@5 {
+ 		compatible = "mediatek,mt753x-port";
+ 		reg = <5>;
+ 		phy-mode = "rgmii";
+ 		fixed-link {
+ 			speed = <1000>;
+ 			full-duplex;
+ 		};
+ 	};
+
+ 	port6: port@6 {
+ 		compatible = "mediatek,mt753x-port";
+ 		reg = <6>;
+ 		phy-mode = "sgmii";
+ 		fixed-link {
+ 			speed = <2500>;
+ 			full-duplex;
+ 		};
+ 	};
+};
+
+&hnat {
+	mtketh-wan = "eth1";
+	mtketh-ppd = "eth0";
+	mtketh-lan = "eth0";
+	mtketh-max-gmac = <0x2>;
+	ext-devices = "wlan1", "wlan0", "ra0","rai0", "apclii0", "apcli0";
+	status = "okay";
 };
 
 &snand {
@@ -285,6 +331,12 @@
 &pcie0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pcie0_pins>;
+	status = "okay";
+};
+
+&pcie1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie1_pins>;
 	status = "okay";
 };
 

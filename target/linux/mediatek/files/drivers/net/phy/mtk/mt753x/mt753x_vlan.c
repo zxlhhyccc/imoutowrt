@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-License-Identifier: GPL-2.0
 /*
  * Copyright (c) 2018 MediaTek Inc.
  */
@@ -117,6 +117,10 @@ void mt753x_apply_vlan_config(struct gsw_mt753x *gsw)
 		if (untag_ports & BIT(i) && !(tag_ports & BIT(i)))
 			pvc_mode = (0x8100 << STAG_VPID_S) |
 				(VA_TRANSPARENT_PORT << VLAN_ATTR_S);
+
+		if ((gsw->port5_cfg.stag_on && i == 5) ||
+		    (gsw->port6_cfg.stag_on && i == 6))
+			pvc_mode = (0x8100 << STAG_VPID_S) | PVC_PORT_STAG;
 
 		mt753x_reg_write(gsw, PVC(i), pvc_mode);
 	}
