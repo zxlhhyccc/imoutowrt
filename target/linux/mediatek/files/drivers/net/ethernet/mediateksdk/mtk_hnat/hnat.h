@@ -740,6 +740,7 @@ enum FoeIpAct {
 #define BIT_FUC_FOE BIT(2)
 #define BIT_FMC_FOE BIT(1)
 #define BIT_FBC_FOE BIT(0)
+#define BIT_TCP_IP4F_NAT_EN BIT(6) 
 #define BIT_UDP_IP4F_NAT_EN BIT(7) /*Enable IPv4 fragment + UDP packet NAT*/
 #define BIT_IPV6_3T_ROUTE_EN BIT(8)
 #define BIT_IPV6_5T_ROUTE_EN BIT(9)
