@@ -62,7 +62,7 @@ static inline void wifi_tx_info_wrapper(unsigned char *tx_info, struct wlan_tx_i
 	info->ringidx = txblk->dbdc_band;
 
 #if defined(APCLI_SUPPORT) || defined(CONFIG_STA_SUPPORT)
-	if (txblk->pMacEntry && IS_ENTRY_PEER_AP(txblk->pMacEntry))
+	if (txblk->pMacEntry && (IS_ENTRY_PEER_AP(txblk->pMacEntry) || IS_ENTRY_CLIENT(txblk->pMacEntry)))
 		info->wcid = txblk->pMacEntry->wcid;
 	else
 #endif /* APCLI_SUPPORT || CONFIG_STA_SUPPORT */
@@ -157,8 +157,7 @@ void wifi_tx_tuple_add(void *entry, unsigned char *tx_info)
 	if (whnat && ra_sw_nat_hook_tx && whnat->cfg.hw_tx_en) {
 		struct sk_buff *skb = (struct sk_buff *)info->pkt;
 
-		if ((FOE_AI_HEAD(skb) == HIT_UNBIND_RATE_REACH) || (FOE_AI_TAIL(skb) == HIT_UNBIND_RATE_REACH)) {
-			if (IS_SPACE_AVAILABLE_HEAD(skb)) {
+		if ((FOE_AI_HEAD(skb) == HIT_UNBIND_RATE_REACH) ) {
 				/*WDMA idx*/
 				FOE_WDMA_ID_HEAD(skb) = whnat->idx;
 				/*Ring idx*/
@@ -166,19 +165,7 @@ void wifi_tx_tuple_add(void *entry, unsigned char *tx_info)
 				/*wtable Idx*/
 				FOE_WC_ID_HEAD(skb) = info->wcid;
 				/*Bssidx*/
-				FOE_BSS_ID_HEAD(skb) = info->bssidx;
-			}
-			if (IS_SPACE_AVAILABLE_TAIL(skb)) {
-				/*WDMA idx*/
-				FOE_WDMA_ID_TAIL(skb) = whnat->idx;
-				/*Ring idx*/
-				FOE_RX_ID_TAIL(skb) = info->ringidx;
-				/*wtable Idx*/
-				FOE_WC_ID_TAIL(skb) = info->wcid;
-				/*Bssidx*/
-				FOE_BSS_ID_TAIL(skb) = info->bssidx;
-			}
-		}
+				FOE_BSS_ID_HEAD(skb) = info->bssidx;}
 
 		/*use port for specify which hw_nat architecture*/
 		if (ra_sw_nat_hook_tx) {

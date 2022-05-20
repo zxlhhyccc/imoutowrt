@@ -1360,11 +1360,9 @@ endif
 
 EXTRA_CFLAGS += -DCONFIG_WIFI_MTD
 
-ifeq ($(CONFIG_PLATFORM_DRV_SUPPORT),y)
+
 chip_objs += $(SRC_DIR)/os/linux/wbsys_main_dev.o
-else
-chip_objs += $(SRC_DIR)/os/linux/rbus_prop_dev.o
-endif
+
 
 #
 # Root

@@ -76,7 +76,7 @@ static inline int wed_agt_dis_ck(struct wed_entry *wed, unsigned int addr, unsig
 
 	while ((value & (1 << busy_bit)) &&
 		   cnt < WED_POLL_MAX) {
-		usleep_range(10000, 15000);
+		msleep_interruptible(15);
 		WHNAT_IO_READ32(wed, addr, &value);
 		cnt++;
 	}
@@ -101,7 +101,7 @@ static inline int wdma_agt_dis_ck(struct wdma_entry *wdma, unsigned int addr, un
 
 	while ((value & (1 << busy_bit)) &&
 		   cnt < WED_POLL_MAX) {
-		usleep_range(10000, 15000);
+		msleep_interruptible(15);
 		WHNAT_IO_READ32(wdma, addr, &value);
 		cnt++;
 	}
@@ -126,7 +126,7 @@ static inline int wifi_agt_dis_ck(struct wifi_entry *wifi, unsigned int addr, un
 
 	while ((value & (1 << busy_bit)) &&
 		   cnt < WED_POLL_MAX) {
-		usleep_range(10000, 15000);
+		msleep_interruptible(15);
 		WHNAT_IO_READ32(wifi, addr, &value);
 		cnt++;
 	}

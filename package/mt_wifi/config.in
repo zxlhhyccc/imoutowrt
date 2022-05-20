@@ -399,16 +399,14 @@ config MTK_TXBF_SUPPORT
 
 config MTK_FAST_NAT_SUPPORT
        bool "Fast-NAT support"
-#       depends on RA_HW_NAT_WIFI
-       default n
+       default y
 
 config MTK_WHNAT_SUPPORT
-	tristate "Wifi Hardware NAT support"
-	depends on MTK_CHIP_MT7615E || MTK_CHIP_MT7915
+	bool "Wifi Hardware NAT support"
 	depends on MTK_WLAN_HOOK
 	depends on MTK_FAST_NAT_SUPPORT
-	depends on PACKAGE_kmod-hw_nat || PACKAGE_kmod-mediatek_hnat
-	default n
+	depends on PACKAGE_kmod-mediatek_hnat
+	default y
 
 config MTK_WARP_V2
 	bool "Warp driver version 2 support"
@@ -447,7 +445,7 @@ config MTK_IGMP_SNOOP_SUPPORT
 	bool "IGMP snooping"
 	depends on MTK_WIFI_DRIVER
 	depends on MTK_MT_AP_SUPPORT
-	default y
+	default n
 
 config MTK_MEMORY_SHRINK
 	bool "Memory Shrink"
@@ -631,7 +629,7 @@ config MTK_RED_SUPPORT
         bool "RED(Random Early Drop) support"
 	depends on MTK_WIFI_DRIVER
 	depends on MTK_MT_AP_SUPPORT || MTK_MT_STA_SUPPORT
-        default y
+        default n
 
 config MTK_FQ_SCH_SUPPORT
         bool "Fair Queueing support"
@@ -643,7 +641,7 @@ config MTK_FQ_SCH_SUPPORT
 config MTK_CTXD_MEM_CPY_SUPPORT
 	bool "CTXD(sw mode) support"
 	depends on MTK_WIFI_DRIVER
-	default y
+	default n
 
 config MTK_CTXD_SCATTER_AND_GATHER_SUPPORT
         bool "CTXD(hw mode) support"
@@ -1045,7 +1043,7 @@ config MTK_LED_CONTROL_SUPPORT
 config MTK_WLAN_HOOK
        bool "WLAN hook Support"
        depends on MTK_WIFI_DRIVER
-       default n
+       default y
 
 config MTK_RADIUS_ACCOUNTING_SUPPORT
 	bool "Radius Accounting Support"

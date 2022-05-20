@@ -255,6 +255,9 @@ define Build/Compile
 endef
 
 define KernelPackage/mt7622/install
+	$(INSTALL_DIR) $(1)/lib/modules/5.10.109/
+	$(INSTALL_BIN) ./files/mtkhnat.ko $(1)/lib/
 endef
+
 
 $(eval $(call KernelPackage,mt7622))

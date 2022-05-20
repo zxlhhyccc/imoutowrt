@@ -238,26 +238,9 @@ TAR_CMD=$(HOST_TAR) -C $(1)/ $(TAR_OPTIONS)
 define KernelPackage/mt_wifi
   CATEGORY:=Kernel modules
   TITLE:=MTK wifi AP driver
-ifneq ($(CONFIG_MTK_FAST_NAT_SUPPORT), )
-ifneq ($(CONFIG_NET_MEDIATEK_HNAT), )
-  DEPENDS+=+kmod-mediatek_hnat
-endif
-endif
-ifneq ($(CONFIG_MTK_WHNAT_SUPPORT), )
-ifneq ($(CONFIG_MTK_WARP_V2), )
-  FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/mt_wifi.ko \
-	$(PKG_BUILD_DIR)/mt_wifi/embedded/plug_in/warp_proxy/mtk_warp_proxy.ko
-  DEPENDS+=+kmod-warp
-  AUTOLOAD:=$(call AutoProbe,mt_wifi mtk_warp_proxy)
-else
   FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/mt_wifi.ko \
 	$(PKG_BUILD_DIR)/mt_wifi/embedded/plug_in/whnat/mt_whnat.ko
   AUTOLOAD:=$(call AutoProbe,mt_wifi mt_whnat)
-endif
-else
-  FILES:=$(PKG_BUILD_DIR)/mt_wifi_ap/mt_wifi.ko
-  AUTOLOAD:=$(call AutoProbe,mt_wifi)
-endif  
   SUBMENU:=Wireless Drivers
   MENU:=1
 endef
@@ -278,6 +261,8 @@ define Build/Compile
 endef
 
 define KernelPackage/mt_wifi/install
+	$(INSTALL_DIR) $(1)/lib/modules/5.10.109/
+	$(INSTALL_BIN) ./files/mtkhnat.ko $(1)/lib/modules/
 endef
 
 $(eval $(call KernelPackage,mt_wifi))

@@ -816,7 +816,7 @@ function apcli_disconnect(dev, vif)
     os.execute("ubus call network.interface.lan add_device \"{\\\"name\\\":\\\""..wifi1name.."\\\"}\"")
     os.execute("ubus call network.interface.lan add_device \"{\\\"name\\\":\\\""..wifi2name.."\\\"}\"")
     os.execute("ubus call network.interface.wan remove_device \"{\\\"name\\\":\\\""..vifname.."\\\"}\"")
-    wanname="wan"
+    wanname="eth1"
     os.execute("ubus call network.interface.wan add_device \"{\\\"name\\\":\\\""..wanname.."\\\"}\"") 
     os.execute("ifdown wan")
     os.execute("ifup wan") 

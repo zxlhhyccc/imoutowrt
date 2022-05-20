@@ -761,15 +761,9 @@ void linux_pci_unmap_single(void *handle, ra_dma_addr_t dma_addr, size_t size, i
 #define PCI_FREE_CONSISTENT(_pci_dev, _size, _virtual_addr, _physical_addr) \
 	pci_free_consistent(_pci_dev, _size, _virtual_addr, _physical_addr)
 
-#if !defined(CONFIG_WIFI_PAGE_ALLOC_SKB) && !defined(CONFIG_WIFI_SLAB_ALLOC_SKB)
-#if (KERNEL_VERSION(3, 5, 0) <= LINUX_VERSION_CODE) && defined(CONFIG_MT7621_ASIC)
+
 #define CONFIG_WIFI_SLAB_ALLOC_SKB
-#else
-#define CONFIG_WIFI_PAGE_ALLOC_SKB
-#endif
-#else
-#define CONFIG_WIFI_PAGE_ALLOC_SKB
-#endif
+
 
 #ifdef CONFIG_WIFI_PAGE_ALLOC_SKB
 #define DEV_ALLOC_SKB(_Pkt, _length)		\

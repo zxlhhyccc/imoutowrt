@@ -969,7 +969,7 @@ VOID mt_int_disable(RTMP_ADAPTER *pAd, struct pci_hif_chip *hif_chip, unsigned i
 	reg_addr = hif_chip->int_ena_reg_addr;
 	regValue = hif_chip->int_enable_mask & ~(hif_chip->intDisableMask);
 	HIF_IO_WRITE32(pAd->hdev_ctrl, reg_addr, regValue);
-	
+	barrier();
 
 	if (regValue == 0)
 		RTMP_CLEAR_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_ACTIVE);
@@ -986,7 +986,7 @@ VOID mt_int_enable(RTMP_ADAPTER *pAd, struct pci_hif_chip *hif_chip, unsigned in
 	reg_addr = hif_chip->int_ena_reg_addr;
 	regValue = hif_chip->int_enable_mask & ~(hif_chip->intDisableMask);
 	HIF_IO_WRITE32(pAd->hdev_ctrl, reg_addr, regValue);
-	
+	barrier();
 
 	if (regValue != 0)
 		RTMP_SET_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_ACTIVE);
