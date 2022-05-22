@@ -1,8 +1,8 @@
-src-git-full packages https://github.com/immortalwrt/packages.git
-src-git-full luci https://github.com/immortalwrt/luci.git
-src-git-full routing https://github.com/openwrt/routing.git
-src-git-full telephony https://github.com/openwrt/telephony.git
-src-git-full nss_packages https://github.com/robimarko/nss-packages.git
+src-git packages https://github.com/immortalwrt/packages.git^7f2224d117047f5cc81a39ed117586a82f35fafe
+src-git luci https://github.com/immortalwrt/luci.git^1baf4beaad91c1e13c01a9bd49e61bd36b6b8cec
+src-git routing https://github.com/openwrt/routing.git^80817c8d59a10961d80407f99d697ee01aaa1125
+src-git telephony https://github.com/openwrt/telephony.git^056e93c1ad0c3030dfdce310a7c33a0653ea3a16
+src-git nss_packages https://github.com/robimarko/nss-packages.git^e344c6492d8e95439d8fbc423c7fe3784b2ffa56
 #src-git-full video https://github.com/openwrt/video.git
 #src-git-full targets https://github.com/openwrt/targets.git
 #src-git-full oldpackages http://git.openwrt.org/packages.git
