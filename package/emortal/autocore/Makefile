@@ -12,6 +12,7 @@ PKG_RELEASE:=$(COMMITCOUNT)
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_TARGET_bcm27xx \
 	CONFIG_TARGET_bcm53xx \
+	CONFIG_TARGET_ipq807x \
 	CONFIG_TARGET_mvebu
 
 include $(INCLUDE_DIR)/package.mk
@@ -23,7 +24,7 @@ define Package/autocore-arm
   DEPENDS:=@(arm||aarch64) \
     +TARGET_bcm27xx:bcm27xx-userland \
     +TARGET_bcm53xx:nvram \
-    +TARGET_mvebu:mhz
+    +(TARGET_mvebu||TARGET_mvebu):mhz
   VARIANT:=arm
 endef
 
