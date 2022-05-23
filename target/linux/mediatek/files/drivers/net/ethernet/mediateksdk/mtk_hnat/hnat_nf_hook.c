@@ -112,9 +112,9 @@ static inline struct net_device *get_dev_from_index(int index)
 
 static inline struct net_device *get_wandev_from_index(int index)
 {
-	if (unlikely(!hnat_priv->g_wandev))
-		{hnat_priv->g_wandev = dev_get_by_name(&init_net, hnat_priv->wan);
-		dev_put(hnat_priv->g_wandev);}
+	if (!hnat_priv->g_wandev)
+		hnat_priv->g_wandev = dev_get_by_name(&init_net, hnat_priv->wan);
+
 	if (hnat_priv->g_wandev && hnat_priv->g_wandev->ifindex == index)
 		return hnat_priv->g_wandev;
 	return NULL;
@@ -128,6 +128,7 @@ static inline int extif_set_dev(struct net_device *dev)
 	for (i = 0; i < MAX_EXT_DEVS && hnat_priv->ext_if[i]; i++) {
 		ext_entry = hnat_priv->ext_if[i];
 		if (!strcmp(dev->name, ext_entry->name) && !ext_entry->dev) {
+			dev_hold(dev);
 			ext_entry->dev = dev;
 			pr_info("%s(%s)\n", __func__, dev->name);
 
@@ -147,6 +148,7 @@ static inline int extif_put_dev(struct net_device *dev)
 		ext_entry = hnat_priv->ext_if[i];
 		if (ext_entry->dev == dev) {
 			ext_entry->dev = NULL;
+			dev_put(dev);
 			pr_info("%s(%s)\n", __func__, dev->name);
 
 			return 0;
@@ -238,24 +240,24 @@ int nf_hnat_netdevice_event(struct notifier_block *unused, unsigned long event,
 		if (!get_wifi_hook_if_index_from_dev(dev))
 			extif_put_dev(dev);
 
-
 		break;
 	case NETDEV_UNREGISTER:
 		if (hnat_priv->g_ppdev == dev) {
 			hnat_priv->g_ppdev = NULL;
+			dev_put(dev);
 		}
 		if (hnat_priv->g_wandev == dev) {
 			hnat_priv->g_wandev = NULL;
+			dev_put(dev);
 		}
 
 		break;
 	case NETDEV_REGISTER:
 		if (IS_PPD(dev) && !hnat_priv->g_ppdev)
-			{hnat_priv->g_ppdev = dev_get_by_name(&init_net, hnat_priv->ppd);
-			dev_put(hnat_priv->g_ppdev);}
+			hnat_priv->g_ppdev = dev_get_by_name(&init_net, hnat_priv->ppd);
 		if (IS_WAN(dev) && !hnat_priv->g_wandev)
-			{hnat_priv->g_wandev = dev_get_by_name(&init_net, hnat_priv->wan);
-			dev_put(hnat_priv->g_wandev);}
+			hnat_priv->g_wandev = dev_get_by_name(&init_net, hnat_priv->wan);
+
 		break;
 	case MTK_FE_RESET_NAT_DONE:
 		pr_info("[%s] HNAT driver starts to do warm init !\n", __func__);
@@ -649,9 +651,9 @@ unsigned int do_hnat_mape_w2l_fast(struct sk_buff *skb, const struct net_device 
 		set_to_ppe(skb);
 
 		__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), in->ifindex & VLAN_VID_MASK);
-		if (unlikely(!hnat_priv->g_ppdev))
-			{hnat_priv->g_ppdev = dev_get_by_name(&init_net, hnat_priv->ppd);
-			 dev_put(hnat_priv->g_ppdev);}
+		if (!hnat_priv->g_ppdev)
+			hnat_priv->g_ppdev = dev_get_by_name(&init_net, hnat_priv->ppd);
+
 		skb->dev = hnat_priv->g_ppdev;
 		skb->protocol = htons(ETH_P_IP);
 
@@ -919,9 +921,9 @@ mtk_hnat_br_nf_local_in(void *priv, struct sk_buff *skb,
 	if ((skb_hnat_iface(skb) == FOE_MAGIC_EXT) && !is_from_extge(skb) &&
 	    !is_multicast_ether_addr(eth_hdr(skb)->h_dest)) {
 	    	if (IS_BR(state->in)) return NF_ACCEPT;
-		if (unlikely(!hnat_priv->g_ppdev))
-			{hnat_priv->g_ppdev = dev_get_by_name(&init_net, hnat_priv->ppd);
-			dev_put(hnat_priv->g_ppdev);}
+		if (!hnat_priv->g_ppdev)
+			hnat_priv->g_ppdev = dev_get_by_name(&init_net, hnat_priv->ppd);
+
 		if (!do_hnat_ext_to_ge(skb, state->in, __func__))
 			return NF_STOLEN;
 		if (!skb)
@@ -1864,10 +1866,12 @@ void mtk_ppe_dev_register_hook(struct net_device *dev)
 				return;
 
 			strncpy(ext_entry->name, dev->name, IFNAMSIZ - 1);
+			dev_hold(dev);
 			ext_entry->dev = dev;
 			ext_if_add(ext_entry);
 
 add_wifi_hook_if:
+			dev_hold(dev);
 			hnat_priv->wifi_hook_if[i] = dev;
 
 			break;
@@ -1883,6 +1887,7 @@ void mtk_ppe_dev_unregister_hook(struct net_device *dev)
 	for (i = 1; i < MAX_IF_NUM; i++) {
 		if (hnat_priv->wifi_hook_if[i] == dev) {
 			hnat_priv->wifi_hook_if[i] = NULL;
+			dev_put(dev);
 
 			break;
 		}
@@ -2359,4 +2364,3 @@ int mtk_hqos_ptype_cb(struct sk_buff *skb, struct net_device *dev,
 
 	return 0;
 }
-
