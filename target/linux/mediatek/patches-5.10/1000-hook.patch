@@ -233,8 +233,8 @@
  
  #define IPXIPX_FEATURES (NETIF_F_SG |		\
  
---- a/net/netfilter/nf_conntrack_proto_tcp.c	2022-05-19 13:46:28.801799000 +0800
-+++ b/net/netfilter/nf_conntrack_proto_tcp.c	2022-05-20 01:47:24.777035060 +0800
+ --- a/net/netfilter/nf_conntrack_proto_tcp.c	2022-05-20 22:09:45.933778000 +0800
++++ b/net/netfilter/nf_conntrack_proto_tcp.c	2022-05-22 11:26:50.034077741 +0800
 @@ -15,9 +15,9 @@
  #include <linux/ipv6.h>
  #include <net/ip6_checksum.h>
@@ -247,7 +247,7 @@
  #include <linux/netfilter.h>
  #include <linux/netfilter_ipv4.h>
  #include <linux/netfilter_ipv6.h>
-@@ -58,7 +58,10 @@
+@@ -50,7 +50,10 @@
  
    /* FIXME: Examine ipfilter's timeouts and conntrack transitions more
       closely.  They're more complex. --RR */
@@ -259,11 +259,11 @@
  static const char *const tcp_conntrack_names[] = {
  	"NONE",
  	"SYN_SENT",
-@@ -490,6 +493,17 @@
- 	if (nf_ct_tcp_no_window_check)
- 		return true;
+@@ -479,6 +482,18 @@
+ 	s32 receiver_offset;
+ 	bool res, in_recv_win;
  
-+       if (net) {
++	if (net) {
 +               if ((net->ipv4.devconf_all && net->ipv4.devconf_dflt && net->ipv6.devconf_all) &&
 +                   net->ipv6.devconf_dflt) {
 +                       if ((IPV4_DEVCONF_DFLT(net, FORWARDING) ||
@@ -274,6 +274,7 @@
 +                       }
 +               }
 +       }
- 	/*
- 	 * Get the required data from the packet.
- 	 */
++
+ 	if (nf_ct_tcp_no_window_check)
+ 		return true;
+
