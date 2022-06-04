@@ -56,6 +56,9 @@ struct hnat_desc {
 	u32 bssid : 6;
 } __packed;
 #endif
+#define MTK_FOE_VLAN2_WINFO_BSS		GENMASK(5, 0)
+#define MTK_FOE_VLAN2_WINFO_WCID	GENMASK(13, 6)
+#define MTK_FOE_VLAN2_WINFO_RING	GENMASK(15, 14)
 
 #define HQOS_MAGIC_TAG 0x5678
 #define HAS_HQOS_MAGIC_TAG(skb) (qos_toggle && skb->protocol == HQOS_MAGIC_TAG)
