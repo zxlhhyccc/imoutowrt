@@ -238,7 +238,7 @@ int nf_hnat_netdevice_event(struct notifier_block *unused, unsigned long event,
 	case NETDEV_GOING_DOWN:
 		if (!get_wifi_hook_if_index_from_dev(dev))
 			extif_put_dev(dev);
-
+		foe_clear_all_bind_entries(dev);
 		break;
 	case NETDEV_UNREGISTER:
 		if (hnat_priv->g_ppdev == dev) {
