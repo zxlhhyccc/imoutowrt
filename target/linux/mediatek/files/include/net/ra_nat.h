@@ -184,9 +184,9 @@ struct head_rx_descinfo4 {
 	uint32_t IF:4;
 	uint32_t rsv2:4;
 	uint32_t MAGIC_TAG_PROTECT: 16;
-	uint32_t WDMAID:8;
+	uint32_t WDMAID:2;
 	uint32_t RXID:2;
-	uint32_t WCID:8;
+	uint32_t WCID:10;
 	uint32_t BSSID:6;
 #if defined(CONFIG_RA_HW_NAT_PPTP_L2TP)
 	u16 SOURCE;
@@ -221,7 +221,7 @@ struct cb_rx_desc_info4 {
 
 
 
-#define FOE_INFO_LEN		    13
+#define FOE_INFO_LEN		    12
 #define WIFI_INFO_LEN		    6
 
 
