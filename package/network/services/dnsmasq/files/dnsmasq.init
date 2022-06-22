@@ -1180,15 +1180,8 @@ dnsmasq_start()
 	config_get_bool dns_redirect "$cfg" dns_redirect 0
 	config_get dns_port "$cfg" port 53
 	if [ "$dns_redirect" = 1 ]; then
-		cat <<-EOF > /tmp/dnsmasq-dns-redirect.nft
-			table inet dnsmasq {
-				chain prerouting {
-					type nat hook prerouting priority -105; policy accept;
-					meta nfproto {ipv4, ipv6} udp dport 53 counter redirect to :$dns_port comment "DNSMASQ";
-				}
-			}
-		EOF
-		nft -f /tmp/dnsmasq-dns-redirect.nft
+		iptables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
+		[ -n "$(command -v ip6tables)" ] && ip6tables -t nat -A PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port
 	fi
 }
 
@@ -1207,13 +1200,11 @@ dnsmasq_stop()
 	rm -f ${BASEDHCPSTAMPFILE}.${cfg}.*.dhcp
 }
 
-nftables_clear()
+iptables_clear()
 {
-	nft --check list table inet dnsmasq > /dev/null 2>&1
-	if [ $? -eq "0" ]; then
-		echo "Remove dnsmasq nat table"
-		nft delete table inet dnsmasq
-	fi
+	config_get dns_port "$cfg" port 53
+	iptables -t nat -D PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port 2>"/dev/null"
+	[ -n "$(command -v ip6tables)" ] && ip6tables -t nat -D PREROUTING -m comment --comment "DNSMASQ" -p udp --dport 53 -j REDIRECT --to-ports $dns_port 2>"/dev/null"
 }
 
 add_interface_trigger()
@@ -1286,7 +1277,7 @@ start_service() {
 }
 
 reload_service() {
-	nftables_clear
+	iptables_clear
 	rc_procd start_service "$@"
 	procd_send_signal dnsmasq "$@"
 }
@@ -1313,5 +1304,5 @@ stop_service() {
 	else
 		config_foreach dnsmasq_stop dnsmasq
 	fi
-	nftables_clear
+	iptables_clear
 }
