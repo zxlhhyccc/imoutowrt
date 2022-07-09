@@ -233,7 +233,7 @@
  
  #define IPXIPX_FEATURES (NETIF_F_SG |		\
  
- --- a/net/netfilter/nf_conntrack_proto_tcp.c	2022-05-20 22:09:45.933778000 +0800
+--- a/net/netfilter/nf_conntrack_proto_tcp.c	2022-05-20 22:09:45.933778000 +0800
 +++ b/net/netfilter/nf_conntrack_proto_tcp.c	2022-05-22 11:26:50.034077741 +0800
 @@ -15,9 +15,9 @@
  #include <linux/ipv6.h>

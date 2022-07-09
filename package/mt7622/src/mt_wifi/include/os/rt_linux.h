@@ -821,7 +821,7 @@ void linux_pci_unmap_single(void *handle, ra_dma_addr_t dma_addr, size_t size,
 	pci_free_consistent(_pci_dev, _size, _virtual_addr, _physical_addr)
 
 
-#define CONFIG_WIFI_SLAB_ALLOC_SKB
+#define CONFIG_WIFI_PAGE_ALLOC_SKB
 
 
 #ifdef CONFIG_WIFI_PAGE_ALLOC_SKB
