@@ -11,6 +11,15 @@ define rootfs_align
 $(patsubst %-256k,0x40000,$(patsubst %-128k,0x20000,$(patsubst %-64k,0x10000,$(patsubst squashfs%,0x4,$(patsubst root.%,%,$(1))))))
 endef
 
+define Build/package-kernel-ubifs
+	mkdir $@.kernelubifs
+	cp $@ $@.kernelubifs/kernel
+	$(STAGING_DIR_HOST)/bin/mkfs.ubifs \
+		$(KERNEL_UBIFS_OPTS) \
+		-r $@.kernelubifs $@
+	rm -r $@.kernelubifs
+endef
+
 define Build/append-image
 	dd if=$(BIN_DIR)/$(DEVICE_IMG_PREFIX)-$(1) >> $@
 endef
@@ -57,6 +66,19 @@ endef
 
 define Build/buffalo-dhp-image
 	$(STAGING_DIR_HOST)/bin/mkdhpimg $@ $@.new
+	mv $@.new $@
+endef
+
+define Build/elecom-wrc-gs-factory
+	$(eval product=$(word 1,$(1)))
+	$(eval version=$(word 2,$(1)))
+	$(eval hash_opt=$(word 3,$(1)))
+	$(MKHASH) md5 $(hash_opt) $@ >> $@
+	( \
+		echo -n "ELECOM $(product) v$(version)" | \
+			dd bs=32 count=1 conv=sync; \
+		dd if=$@; \
+	) > $@.new
 	mv $@.new $@
 endef
 
@@ -240,8 +262,7 @@ define Build/zip
 	mkdir $@.tmp
 	mv $@ $@.tmp/$(word 1,$(1))
 
-	$(STAGING_DIR_HOST)/bin/zip -j -X \
-		$(if $(SOURCE_DATE_EPOCH),--mtime="$(SOURCE_DATE_EPOCH)") \
+	TZ=UTC $(STAGING_DIR_HOST)/bin/zip -j -X \
 		$(wordlist 2,$(words $(1)),$(1)) \
 		$@ $@.tmp/$(if $(word 1,$(1)),$(word 1,$(1)),$$(basename $@))
 	rm -rf $@.tmp
@@ -292,13 +313,25 @@ define Build/append-ubi
 		$(if $(UBOOTENV_IN_UBI),--uboot-env) \
 		$(if $(KERNEL_IN_UBI),--kernel $(IMAGE_KERNEL)) \
 		$(foreach part,$(UBINIZE_PARTS),--part $(part)) \
-		$(IMAGE_ROOTFS) \
+		--rootfs $(IMAGE_ROOTFS) \
 		$@.tmp \
 		-p $(BLOCKSIZE:%k=%KiB) -m $(PAGESIZE) \
 		$(if $(SUBPAGESIZE),-s $(SUBPAGESIZE)) \
 		$(if $(VID_HDR_OFFSET),-O $(VID_HDR_OFFSET)) \
 		$(UBINIZE_OPTS)
 	cat $@.tmp >> $@
+	rm $@.tmp
+endef
+
+define Build/ubinize-kernel
+	cp $@ $@.tmp
+	sh $(TOPDIR)/scripts/ubinize-image.sh \
+		--kernel $@.tmp \
+		$@ \
+		-p $(BLOCKSIZE:%k=%KiB) -m $(PAGESIZE) \
+		$(if $(SUBPAGESIZE),-s $(SUBPAGESIZE)) \
+		$(if $(VID_HDR_OFFSET),-O $(VID_HDR_OFFSET)) \
+		$(UBINIZE_OPTS)
 	rm $@.tmp
 endef
 

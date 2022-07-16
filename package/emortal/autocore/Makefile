@@ -6,7 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=autocore
-PKG_VERSION:=2
+PKG_FLAGS:=nonshared
 PKG_RELEASE:=$(COMMITCOUNT)
 
 PKG_CONFIG_DEPENDS:= \
@@ -21,8 +21,7 @@ define Package/autocore-arm
   MAINTAINER:=CN_SZTL
   DEPENDS:=@(arm||aarch64) \
     +TARGET_bcm27xx:bcm27xx-userland \
-    +TARGET_bcm53xx:nvram \
-    +ethtool
+    +TARGET_bcm53xx:nvram
   VARIANT:=arm
 endef
 
@@ -45,13 +44,12 @@ define Package/autocore/install/Default
 
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_BIN) ./files/generic/cpuinfo $(1)/sbin/
-	$(INSTALL_BIN) ./files/generic/ethinfo $(1)/sbin/
 endef
 
 define Package/autocore-arm/install
 	$(call Package/autocore/install/Default,$(1))
 
-ifneq ($(filter ipq% %mt7622, $(TARGETID)),)
+ifneq ($(filter ipq%, $(TARGETID)),)
 	$(INSTALL_BIN) ./files/arm/tempinfo $(1)/sbin/
 endif
 endef
