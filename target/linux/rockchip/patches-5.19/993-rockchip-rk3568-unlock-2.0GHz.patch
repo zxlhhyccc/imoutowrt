@@ -1,0 +1,14 @@
+--- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi	2022-08-07 22:05:10.482966202 +0800
++++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi	2022-08-07 22:07:46.925659362 +0800
+@@ -127,6 +127,11 @@
+ 			opp-hz = /bits/ 64 <1800000000>;
+ 			opp-microvolt = <1050000 1050000 1150000>;
+ 		};
++
++		opp-1992000000 {
++			opp-hz = /bits/ 64 <1992000000>;
++			opp-microvolt = <1150000 1150000 1150000>;
++		};
+ 	};
+ 
+ 	firmware {
