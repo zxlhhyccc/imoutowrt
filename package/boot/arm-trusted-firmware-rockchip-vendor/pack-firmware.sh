@@ -42,6 +42,7 @@ if [ "$ACTION" == "build" ]; then
 	esac
 elif [ "$ACTION" == "install" ]; then
 	mkdir -p "$STAGING_DIR_IMAGE"
+	cp -fp "$PKG_BUILD_DIR/tools/mkimage" "$STAGING_DIR_IMAGE"/
 	cp -fp "$PKG_BUILD_DIR/bin/$ATF" "$STAGING_DIR_IMAGE"/
 	case "$VARIANT" in
 	rk33*)
