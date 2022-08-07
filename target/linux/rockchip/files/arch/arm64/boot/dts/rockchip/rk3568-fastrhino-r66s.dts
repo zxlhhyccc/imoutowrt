@@ -2,6 +2,7 @@
 
 /dts-v1/;
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/pinctrl/rockchip.h>
 #include "rk3568.dtsi"
@@ -18,7 +19,7 @@
 		led-running = &power_led;
 		led-upgrade = &power_led;
 		mmc0 = &sdmmc0;
-	}
+	};
 
 	chosen: chosen {
 		stdout-path = "serial2:1500000n8";

@@ -109,7 +109,7 @@ define U-Boot/evb-rk3568
   BUILD_SUBTARGET:=armv8
   NAME:=EVB1
   BUILD_DEVICES:= \
-    fastrhino_r66s
+    fastrhino_fastrhino_r66s
   DEPENDS:=+PACKAGE_u-boot-evb-rk3568:arm-trusted-firmware-rk3568
   PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
   ATF:=rk3568_bl31_v1.34.elf
@@ -146,8 +146,9 @@ ifneq ($(USE_RKBIN),)
 	$(CP) $(PKG_BUILD_DIR)/uboot.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-uboot.img
 else
   ifneq ($(DDR),)
-    SYS_BOARD:=$(word $(words $(subst -, ,$(BUILD_VARIANT))),$(subst -, ,$(BUILD_VARIANT)))
-    $(STAGING_DIR_IMAGE)/mkimage -n $(SYS_BOARD) -T rksd -d $(STAGING_DIR_IMAGE)/$(DDR):$(PKG_BUILD_DIR)/spl/u-boot-spl.bin $(PKG_BUILD_DIR)/idbloader.img
+	( SYS_BOARD='$(word $(words $(subst -, ,$(BUILD_VARIANT))),$(subst -, ,$(BUILD_VARIANT)))' ; \
+		$(PKG_BUILD_DIR)/tools/mkimage -n "$$$${SYS_BOARD}" -T rksd \
+		-d $(STAGING_DIR_IMAGE)/$(DDR):$(PKG_BUILD_DIR)/spl/u-boot-spl.bin $(PKG_BUILD_DIR)/idbloader.img ; )
   endif
 	$(CP) $(PKG_BUILD_DIR)/idbloader.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-idbloader.img
 	$(CP) $(PKG_BUILD_DIR)/u-boot.itb $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot.itb
