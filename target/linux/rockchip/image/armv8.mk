@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2020 Tobias Maedel
 
-define Device/fastrhino_fastrhino_r66s
+define Device/fastrhino-r66s
   DEVICE_VENDOR := FastRhino
   DEVICE_MODEL := R66S
   SOC := rk3568
@@ -10,7 +10,7 @@ define Device/fastrhino_fastrhino_r66s
   IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-img | gzip | append-metadata
   DEVICE_PACKAGES := kmod-r8125
 endef
-TARGET_DEVICES += fastrhino_fastrhino_r66s
+TARGET_DEVICES += fastrhino-r66s
 
 define Device/friendlyarm_nanopi-r2c
   DEVICE_VENDOR := FriendlyARM
