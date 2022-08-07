@@ -9,7 +9,7 @@ define Device/fastrhino-r66s
   UBOOT_DEVICE_NAME := r66s-rk3568
   IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-img | gzip | append-metadata
   DEVICE_PACKAGES := kmod-r8125
-  SUPPORTED_DEVICES:=fastrhino,r66s
+  SUPPORTED_DEVICES := fastrhino,r66s
 endef
 TARGET_DEVICES += fastrhino-r66s
 
