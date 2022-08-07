@@ -2,6 +2,16 @@
 #
 # Copyright (C) 2020 Tobias Maedel
 
+define Device/fastrhino_r66s
+  DEVICE_VENDOR := FastRhino
+  DEVICE_MODEL := R66S
+  SOC := rk3568
+  UBOOT_DEVICE_NAME := evb-rk3568
+  IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-img | gzip | append-metadata
+  DEVICE_PACKAGES := kmod-r8125
+endef
+TARGET_DEVICES += fastrhino_r66s
+
 define Device/friendlyarm_nanopi-r2c
   DEVICE_VENDOR := FriendlyARM
   DEVICE_MODEL := NanoPi R2C
