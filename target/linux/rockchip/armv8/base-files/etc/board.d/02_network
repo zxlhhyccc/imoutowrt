@@ -7,6 +7,7 @@ rockchip_setup_interfaces()
 	local board="$1"
 
 	case "$board" in
+	fastrhino,r66s|\
 	friendlyarm,nanopi-r2c|\
 	friendlyarm,nanopi-r2s|\
 	friendlyarm,nanopi-r4s|\
@@ -35,6 +36,7 @@ rockchip_setup_macs()
 	local label_mac=""
 
 	case "$board" in
+	fastrhino,r66s|\
 	friendlyarm,nanopi-r2c|\
 	friendlyarm,nanopi-r2s)
 		wan_mac=$(nanopi_r2s_generate_mac)
