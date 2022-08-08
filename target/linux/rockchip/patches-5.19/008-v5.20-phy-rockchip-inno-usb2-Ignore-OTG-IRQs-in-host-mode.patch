@@ -1,7 +1,7 @@
-From 3ddee7849f0ab4b4edcc812c6569236b53796640 Mon Sep 17 00:00:00 2001
+From fd7d47484125c7d04578de9294faa7fec6e5df0a Mon Sep 17 00:00:00 2001
 From: Samuel Holland <samuel@sholland.org>
 Date: Fri, 8 Jul 2022 01:14:34 -0500
-Subject: [PATCH 49/51] phy: rockchip-inno-usb2: Ignore OTG IRQs in host mode
+Subject: [PATCH] phy: rockchip-inno-usb2: Ignore OTG IRQs in host mode
 
 When the OTG port is fixed to host mode, the driver does not request its
 IRQs, nor does it enable those IRQs in hardware. Similarly, the driver
@@ -13,15 +13,19 @@ an undefined state, or try to queue a uninitialized work item.
 Fixes: 6a98df08ccd5 ("phy: rockchip-inno-usb2: Fix muxed interrupt support")
 Reported-by: Frank Wunderlich <frank-w@public-files.de>
 Signed-off-by: Samuel Holland <samuel@sholland.org>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
 Tested-by: Peter Geis <pgwipeout@gmail.com>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+Link: https://lore.kernel.org/r/20220708061434.38115-1-samuel@sholland.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
  drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+index 706a2263b0b2ae..0b1e9337ee8e2b 100644
 --- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
 +++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-@@ -978,7 +978,9 @@ static irqreturn_t rockchip_usb2phy_irq(
+@@ -978,7 +978,9 @@ static irqreturn_t rockchip_usb2phy_irq(int irq, void *data)
  
  		switch (rport->port_id) {
  		case USB2PHY_PORT_OTG:
