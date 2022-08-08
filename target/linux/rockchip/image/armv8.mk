@@ -6,7 +6,7 @@ define Device/fastrhino-r66s
   DEVICE_VENDOR := FastRhino
   DEVICE_MODEL := R66S
   SOC := rk3568
-  UBOOT_DEVICE_NAME := r66s-rk3568
+  UBOOT_DEVICE_NAME := fastrhino-r66s-rk3568
   IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-img | gzip | append-metadata
   DEVICE_PACKAGES := kmod-r8125
   SUPPORTED_DEVICES := fastrhino,r66s

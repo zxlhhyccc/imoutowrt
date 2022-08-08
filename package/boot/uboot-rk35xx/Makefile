@@ -25,7 +25,7 @@ define U-Boot/Default
   HIDDEN:=1
 endef
 
-define U-Boot/r66s-rk3568
+define U-Boot/fastrhino-r66s-rk3568
   BUILD_SUBTARGET:=armv8
   NAME:=FastRhino R66S
   BUILD_DEVICES:= \
@@ -37,7 +37,7 @@ define U-Boot/r66s-rk3568
 endef
 
 UBOOT_TARGETS := \
-  r66s-rk3568
+  fastrhino-r66s-rk3568
 
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 
@@ -52,8 +52,8 @@ endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
-	$(PKG_BUILD_DIR)/tools/mkimage -n rk3568 -T rksd -d \
-		$(STAGING_DIR_IMAGE)/$(DDR):$(PKG_BUILD_DIR)/spl/u-boot-spl.bin $(PKG_BUILD_DIR)/idbloader.img
+	$(PKG_BUILD_DIR)/tools/mkimage -n rk3568 -T rksd \
+		-d $(STAGING_DIR_IMAGE)/$(DDR):$(PKG_BUILD_DIR)/spl/u-boot-spl.bin $(PKG_BUILD_DIR)/idbloader.img
 	$(CP) $(PKG_BUILD_DIR)/idbloader.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-idbloader.img
 	$(CP) $(PKG_BUILD_DIR)/u-boot.itb $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot.itb
 endef
