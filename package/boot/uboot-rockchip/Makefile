@@ -102,21 +102,6 @@ define U-Boot/rockpro64-rk3399
   ATF:=rk3399_bl31.elf
 endef
 
-
-# RK3568 boards
-
-define U-Boot/fastrhino-r66s-rk3568
-  BUILD_SUBTARGET:=armv8
-  NAME:=FastRhino R66S
-  BUILD_DEVICES:= \
-    fastrhino_fastrhino_r66s
-  DEPENDS:=+PACKAGE_u-boot-fastrhino-r66s-rk3568:arm-trusted-firmware-rk3568
-  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
-  ATF:=rk3568_bl31_v1.34.elf
-  DDR:=rk3568_ddr_1560MHz_v1.13.bin
-endef
-
-
 UBOOT_TARGETS := \
   nanopi-r4s-rk3399 \
   rock-pi-4-rk3399 \
@@ -124,8 +109,7 @@ UBOOT_TARGETS := \
   nanopi-r2c-rk3328 \
   nanopi-r2s-rk3328 \
   orangepi-r1-plus-rk3328 \
-  orangepi-r1-plus-lts-rk3328 \
-  fastrhino-r66s-rk3568
+  orangepi-r1-plus-lts-rk3328
 
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 
@@ -145,11 +129,6 @@ ifneq ($(USE_RKBIN),)
 	$(STAGING_DIR_IMAGE)/loaderimage --pack --uboot $(PKG_BUILD_DIR)/u-boot-dtb.bin $(PKG_BUILD_DIR)/uboot.img 0x200000
 	$(CP) $(PKG_BUILD_DIR)/uboot.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-uboot.img
 else
-  ifneq ($(DDR),)
-	( SYS_BOARD='$(word $(words $(subst -, ,$(BUILD_VARIANT))),$(subst -, ,$(BUILD_VARIANT)))' ; \
-		$(PKG_BUILD_DIR)/tools/mkimage -n "$$$${SYS_BOARD}" -T rksd \
-		-d $(STAGING_DIR_IMAGE)/$(DDR):$(PKG_BUILD_DIR)/spl/u-boot-spl.bin $(PKG_BUILD_DIR)/idbloader.img ; )
-  endif
 	$(CP) $(PKG_BUILD_DIR)/idbloader.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-idbloader.img
 	$(CP) $(PKG_BUILD_DIR)/u-boot.itb $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot.itb
 endif
