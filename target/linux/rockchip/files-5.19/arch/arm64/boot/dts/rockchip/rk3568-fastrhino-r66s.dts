@@ -25,17 +25,6 @@
 		stdout-path = "serial2:1500000n8";
 	};
 
-	gpio-leds {
-		compatible = "gpio-leds";
-		pinctrl-names = "default";
-		pinctrl-0 = <&power_led_pin>;
-
-		power_led: led-power {
-			label = "green:power";
-			gpios = <&gpio0 RK_PC0 GPIO_ACTIVE_HIGH>;
-		};
-	};
-
 	gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
@@ -46,6 +35,17 @@
 			gpios = <&gpio0 RK_PB6 GPIO_ACTIVE_LOW>;
 			label = "reset";
 			linux,code = <KEY_RESTART>;
+		};
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&power_led_pin>;
+
+		power_led: led-power {
+			label = "green:power";
+			gpios = <&gpio0 RK_PC0 GPIO_ACTIVE_HIGH>;
 		};
 	};
 
