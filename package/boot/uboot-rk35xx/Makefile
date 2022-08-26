@@ -30,7 +30,7 @@ define U-Boot/fastrhino-r66s-rk3568
   NAME:=FastRhino R66S
   BUILD_DEVICES:= \
     fastrhino-r66s
-  DEPENDS:=+PACKAGE_u-boot-r66s-rk3568:arm-trusted-firmware-rk3568
+  DEPENDS:=+PACKAGE_u-boot-fastrhino-r66s-rk3568:arm-trusted-firmware-rk3568
   PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
   ATF:=rk3568_bl31_v1.34.elf
   DDR:=rk3568_ddr_1560MHz_v1.13.bin
