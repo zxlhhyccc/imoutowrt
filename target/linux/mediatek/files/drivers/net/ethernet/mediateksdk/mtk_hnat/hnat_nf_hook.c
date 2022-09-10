@@ -259,10 +259,6 @@ int nf_hnat_netdevice_event(struct notifier_block *unused, unsigned long event,
 			hnat_priv->g_wandev = dev_get_by_name(&init_net, hnat_priv->wan);
 
 		break;
-	case MTK_FE_RESET_NAT_DONE:
-		pr_info("[%s] HNAT driver starts to do warm init !\n", __func__);
-		hnat_warm_init();
-		break;
 	default:
 		break;
 	}
@@ -2241,16 +2237,6 @@ mtk_hnat_ipv4_nf_local_out(void *priv, struct sk_buff *skb,
 	return NF_ACCEPT;
 }
 
-static unsigned int mtk_hnat_br_nf_forward(void *priv,
-					   struct sk_buff *skb,
-					   const struct nf_hook_state *state)
-{
-	if ((hnat_priv->data->version == MTK_HNAT_V2) &&
-	    unlikely(IS_EXT(state->in) && IS_EXT(state->out)))
-		hnat_set_head_frags(state, skb, 1, hnat_set_alg);
-
-	return NF_ACCEPT;
-}
 
 static struct nf_hook_ops mtk_hnat_nf_ops[] __read_mostly = {
 	{
@@ -2321,21 +2307,6 @@ void hnat_unregister_nf_hooks(void)
 
 int whnat_adjust_nf_hooks(void)
 {
-	struct nf_hook_ops *hook = mtk_hnat_nf_ops;
-	unsigned int n = ARRAY_SIZE(mtk_hnat_nf_ops);
-
-	while (n-- > 0) {
-		if (hook[n].hook == mtk_hnat_br_nf_local_in) {
-			hook[n].hooknum = NF_BR_PRE_ROUTING;
-			hook[n].priority = NF_BR_PRI_FIRST + 1;
-		} else if (hook[n].hook == mtk_hnat_br_nf_local_out) {
-			hook[n].hooknum = NF_BR_POST_ROUTING;
-		} else if (hook[n].hook == mtk_pong_hqos_handler) {
-			hook[n].hook = mtk_hnat_br_nf_forward;
-			hook[n].hooknum = NF_BR_FORWARD;
-			hook[n].priority = NF_BR_PRI_LAST - 1;
-		}
-	}
 
 	return 0;
 }
