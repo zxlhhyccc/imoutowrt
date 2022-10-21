@@ -1,0 +1,31 @@
+From fe96fcbdffc80993524e06aa307661a76dd04e3b Mon Sep 17 00:00:00 2001
+From: Robert Marko <robimarko@gmail.com>
+Date: Fri, 21 Oct 2022 13:25:02 +0200
+Subject: [PATCH] net: mac80211: minstrel: use get_random_bytes()
+
+Since 6.1-rc1 all of the users of prandom were converted and it was
+dropped in ("prandom: remove unused functions"), but since backports
+are pre RC1 they are failing to build, so until backports are updated
+patch them to compile.
+
+Signed-off-by: Robert Marko <robimarko@gmail.com>
+---
+ net/mac80211/rc80211_minstrel_ht.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
+index 233415d..3345f27 100644
+--- a/net/mac80211/rc80211_minstrel_ht.c
++++ b/net/mac80211/rc80211_minstrel_ht.c
+@@ -1992,7 +1992,7 @@ static void __init init_sample_table(void)
+ 
+ 	memset(sample_table, 0xff, sizeof(sample_table));
+ 	for (col = 0; col < SAMPLE_COLUMNS; col++) {
+-		prandom_bytes(rnd, sizeof(rnd));
++		get_random_bytes(rnd, sizeof(rnd));
+ 		for (i = 0; i < MCS_GROUP_RATES; i++) {
+ 			new_idx = (i + rnd[i]) % MCS_GROUP_RATES;
+ 			while (sample_table[col][new_idx] != 0xff)
+-- 
+2.37.3
+
