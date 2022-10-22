@@ -21,7 +21,6 @@ index ed9748aac91e..752cc6a91d49 100644
  		.supports_sta_ps = false,
 -		.cold_boot_calib = true,
 +		.cold_boot_calib = false,
- 		.cbcal_restart_fw = true,
  		.fw_mem_mode = 0,
  		.num_vdevs = 16 + 1,
  		.num_peers = 512,
