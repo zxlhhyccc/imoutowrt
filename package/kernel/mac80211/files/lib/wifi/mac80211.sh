@@ -196,11 +196,11 @@ detect_mac80211() {
 			set wireless.${name}=wifi-device
 			set wireless.${name}.type=mac80211
 			${dev_id}
-			set wireless.${name}.channel=${channel}
+<			set wireless.${name}.channel=${channel}
 			set wireless.${name}.band=${mode_band}
 			set wireless.${name}.htmode=$htmode
-			set wireless.${name}.disabled=0
 			set wireless.${name}.country=US
+			set wireless.${name}.disabled=0
 
 			set wireless.default_${name}=wifi-iface
 			set wireless.default_${name}.device=${name}
@@ -208,6 +208,7 @@ detect_mac80211() {
 			set wireless.default_${name}.mode=ap
 			set wireless.default_${name}.ssid=ImmortalWrt
 			set wireless.default_${name}.encryption=none
+			set wireless.default_${name}.iw_qos_map_set=none
 EOF
 		uci -q commit wireless
 	done
