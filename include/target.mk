@@ -55,7 +55,7 @@ DEFAULT_PACKAGES.nas:=\
 DEFAULT_PACKAGES.router:=\
 	dnsmasq-full \
 	firewall \
-	iptables-legacy \
+	iptables-zz-legacy \
 	ppp \
 	ppp-mod-pppoe
 # For easy usage
