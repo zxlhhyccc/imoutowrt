@@ -133,3 +133,11 @@ ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
 endif
 endef
 TARGET_DEVICES += xiaomi_ax9000
+
+define Device/xiaomi_ax9000-stock
+	$(call Device/xiaomi_ax9000)
+	DEVICE_VARIANT := (stock layout)
+	KERNEL_SIZE :=
+	ARTIFACTS :=
+endef
+TARGET_DEVICES += xiaomi_ax9000-stock

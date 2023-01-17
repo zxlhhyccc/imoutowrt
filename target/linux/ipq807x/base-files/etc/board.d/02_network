@@ -29,7 +29,8 @@ ipq807x_setup_interfaces()
 	xiaomi,ax3600-stock)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
 		;;
-	xiaomi,ax9000)
+	xiaomi,ax9000|\
+	xiaomi,ax9000-stock)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
 		;;
 	*)
