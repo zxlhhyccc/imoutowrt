@@ -5,10 +5,10 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_VERSION:=2023.01
+PKG_VERSION:=2023.04-rc1
 PKG_RELEASE:=1
 
-PKG_HASH:=69423bad380f89a0916636e89e6dcbd2e4512d584308d922d1039d1e4331950f
+PKG_HASH:=368efc52d1a513e2e92747e93a5b51bd351c4751a93e9f7fa07e4ce754569b8a
 
 PKG_MAINTAINER:=Tobias Maedel <openwrt@tbspace.de>
 
@@ -135,7 +135,8 @@ UBOOT_TARGETS := \
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 
 UBOOT_MAKE_FLAGS += \
-  BL31=$(STAGING_DIR_IMAGE)/$(ATF)
+  BL31=$(STAGING_DIR_IMAGE)/$(ATF) \
+  PATH=$(TOPDIR)/staging_dir/host/bin:$(PATH)
 
 define Build/Configure
 	$(call Build/Configure/U-Boot)
