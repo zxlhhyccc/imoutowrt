@@ -42,7 +42,7 @@ diff --git a/ecm_classifier_default.c b/ecm_classifier_default.c
 index 39315a9..1dad277 100644
 --- a/ecm_classifier_default.c
 +++ b/ecm_classifier_default.c
-@@ -757,26 +757,14 @@ int ecm_classifier_default_init(struct dentry *dentry)
+@@ -760,26 +760,14 @@ int ecm_classifier_default_init(struct dentry *dentry)
  		return -1;
  	}
 
@@ -79,7 +79,7 @@ diff --git a/ecm_classifier_dscp.c b/ecm_classifier_dscp.c
 index 4f0caeb..6c9401e 100644
 --- a/ecm_classifier_dscp.c
 +++ b/ecm_classifier_dscp.c
-@@ -763,12 +763,8 @@ int ecm_classifier_dscp_init(struct dentry *dentry)
+@@ -816,12 +816,8 @@ int ecm_classifier_dscp_init(struct dentry *dentry)
  		return -1;
  	}
 
@@ -145,7 +145,7 @@ diff --git a/ecm_classifier_hyfi.c b/ecm_classifier_hyfi.c
 index a57a13e..fad7209 100644
 --- a/ecm_classifier_hyfi.c
 +++ b/ecm_classifier_hyfi.c
-@@ -1099,11 +1099,8 @@ int ecm_classifier_hyfi_rules_init(struc
+@@ -1104,11 +1104,8 @@ int ecm_classifier_hyfi_rules_init(struc
  		goto classifier_task_cleanup;
  	}
 
@@ -201,7 +201,7 @@ diff --git a/ecm_classifier_pcc.c b/ecm_classifier_pcc.c
 index 6c6fcd4..af13357 100644
 --- a/ecm_classifier_pcc.c
 +++ b/ecm_classifier_pcc.c
-@@ -1232,12 +1232,8 @@ int ecm_classifier_pcc_init(struct dentry *dentry)
+@@ -1246,12 +1246,8 @@ int ecm_classifier_pcc_init(struct dentry *dentry)
  		return -1;
  	}
 
@@ -220,7 +220,7 @@ diff --git a/ecm_conntrack_notifier.c b/ecm_conntrack_notifier.c
 index f4f2c60..7b20132 100644
 --- a/ecm_conntrack_notifier.c
 +++ b/ecm_conntrack_notifier.c
-@@ -416,12 +416,8 @@ int ecm_conntrack_notifier_init(struct dentry *dentry)
+@@ -429,12 +429,8 @@ int ecm_conntrack_notifier_init(struct dentry *dentry)
  		return -1;
  	}
 
@@ -239,7 +239,7 @@ diff --git a/ecm_db/ecm_db_connection.c b/ecm_db/ecm_db_connection.c
 index 77e5f3f..4bd47c3 100644
 --- a/ecm_db/ecm_db_connection.c
 +++ b/ecm_db/ecm_db_connection.c
-@@ -3784,11 +3784,8 @@ static struct file_operations ecm_db_connection_count_simple_fops = {
+@@ -3790,11 +3790,8 @@ static struct file_operations ecm_db_connection_count_simple_fops = {
   */
  bool ecm_db_connection_init(struct dentry *dentry)
  {
@@ -311,7 +311,7 @@ diff --git a/ecm_db/ecm_db_node.c b/ecm_db/ecm_db_node.c
 index 89b386f..513fb84 100644
 --- a/ecm_db/ecm_db_node.c
 +++ b/ecm_db/ecm_db_node.c
-@@ -1188,11 +1188,8 @@ keep_sni_conn:
+@@ -1202,11 +1202,8 @@ keep_sni_conn:
   */
  bool ecm_db_node_init(struct dentry *dentry)
  {
@@ -410,7 +410,7 @@ diff --git a/frontends/nss/ecm_nss_ipv4.c b/frontends/nss/ecm_nss_ipv4.c
 index 0fee3e8..5b0ce29 100644
 --- a/frontends/nss/ecm_nss_ipv4.c
 +++ b/frontends/nss/ecm_nss_ipv4.c
-@@ -1006,41 +1006,23 @@ int ecm_nss_ipv4_init(struct dentry *dentry)
+@@ -1009,41 +1009,23 @@ int ecm_nss_ipv4_init(struct dentry *dentry)
  		return result;
  	}
 
@@ -464,7 +464,7 @@ index 0fee3e8..5b0ce29 100644
 
  	if (!debugfs_create_file("accel_limit_mode", S_IRUGO | S_IWUSR, ecm_nss_ipv4_dentry,
  					NULL, &ecm_nss_ipv4_accel_limit_mode_fops)) {
-@@ -1071,11 +1053,8 @@ int ecm_nss_ipv4_init(struct dentry *dentry)
+@@ -1074,11 +1056,8 @@ int ecm_nss_ipv4_init(struct dentry *dentry)
  		goto task_cleanup;
  	}
 
@@ -482,7 +482,7 @@ diff --git a/frontends/nss/ecm_nss_ipv6.c b/frontends/nss/ecm_nss_ipv6.c
 index ee6b434..8d13f68 100644
 --- a/frontends/nss/ecm_nss_ipv6.c
 +++ b/frontends/nss/ecm_nss_ipv6.c
-@@ -985,41 +985,23 @@ int ecm_nss_ipv6_init(struct dentry *dentry)
+@@ -986,41 +986,23 @@ int ecm_nss_ipv6_init(struct dentry *dentry)
  		return result;
  	}
 
@@ -536,7 +536,7 @@ index ee6b434..8d13f68 100644
 
  	if (!debugfs_create_file("accel_limit_mode", S_IRUGO | S_IWUSR, ecm_nss_ipv6_dentry,
  					NULL, &ecm_nss_ipv6_accel_limit_mode_fops)) {
-@@ -1050,11 +1032,8 @@ int ecm_nss_ipv6_init(struct dentry *dentry)
+@@ -1051,11 +1033,8 @@ int ecm_nss_ipv6_init(struct dentry *dentry)
  		goto task_cleanup;
  	}
 
@@ -620,7 +620,7 @@ diff --git a/frontends/nss/ecm_nss_non_ported_ipv4.c b/frontends/nss/ecm_nss_non
 index ec4f365..77de341 100644
 --- a/frontends/nss/ecm_nss_non_ported_ipv4.c
 +++ b/frontends/nss/ecm_nss_non_ported_ipv4.c
-@@ -1940,11 +1940,8 @@ struct ecm_nss_non_ported_ipv4_connection_instance *ecm_nss_non_ported_ipv4_conn
+@@ -1828,11 +1828,8 @@ struct ecm_nss_non_ported_ipv4_connection_instance *ecm_nss_non_ported_ipv4_conn
   */
  bool ecm_nss_non_ported_ipv4_debugfs_init(struct dentry *dentry)
  {
@@ -638,7 +638,7 @@ diff --git a/frontends/nss/ecm_nss_non_ported_ipv6.c b/frontends/nss/ecm_nss_non
 index 13e0cc5..91ad7aa 100644
 --- a/frontends/nss/ecm_nss_non_ported_ipv6.c
 +++ b/frontends/nss/ecm_nss_non_ported_ipv6.c
-@@ -1768,11 +1768,8 @@ struct ecm_nss_non_ported_ipv6_connection_instance *ecm_nss_non_ported_ipv6_conn
+@@ -1654,11 +1654,8 @@ struct ecm_nss_non_ported_ipv6_connection_instance *ecm_nss_non_ported_ipv6_conn
   */
  bool ecm_nss_non_ported_ipv6_debugfs_init(struct dentry *dentry)
  {
@@ -718,7 +718,7 @@ diff --git a/frontends/sfe/ecm_sfe_ipv4.c b/frontends/sfe/ecm_sfe_ipv4.c
 index 2076bad..3f30821 100644
 --- a/frontends/sfe/ecm_sfe_ipv4.c
 +++ b/frontends/sfe/ecm_sfe_ipv4.c
-@@ -914,48 +914,27 @@ int ecm_sfe_ipv4_init(struct dentry *dentry)
+@@ -920,48 +920,27 @@ int ecm_sfe_ipv4_init(struct dentry *dentry)
  	}
 
  #ifdef CONFIG_XFRM
@@ -785,7 +785,7 @@ diff --git a/frontends/sfe/ecm_sfe_ipv6.c b/frontends/sfe/ecm_sfe_ipv6.c
 index e8981ee..54fdbf3 100644
 --- a/frontends/sfe/ecm_sfe_ipv6.c
 +++ b/frontends/sfe/ecm_sfe_ipv6.c
-@@ -906,48 +906,27 @@ int ecm_sfe_ipv6_init(struct dentry *dentry)
+@@ -912,48 +912,27 @@ int ecm_sfe_ipv6_init(struct dentry *dentry)
  	}
 
  #ifdef CONFIG_XFRM
@@ -852,7 +852,7 @@ diff --git a/frontends/sfe/ecm_sfe_non_ported_ipv4.c b/frontends/sfe/ecm_sfe_non
 index d7cad2a..696bd13 100644
 --- a/frontends/sfe/ecm_sfe_non_ported_ipv4.c
 +++ b/frontends/sfe/ecm_sfe_non_ported_ipv4.c
-@@ -1930,11 +1930,8 @@ struct ecm_sfe_non_ported_ipv4_connection_instance *ecm_sfe_non_ported_ipv4_conn
+@@ -1860,11 +1860,8 @@ struct ecm_sfe_non_ported_ipv4_connection_instance *ecm_sfe_non_ported_ipv4_conn
   */
  bool ecm_sfe_non_ported_ipv4_debugfs_init(struct dentry *dentry)
  {
@@ -870,7 +870,7 @@ diff --git a/frontends/sfe/ecm_sfe_non_ported_ipv6.c b/frontends/sfe/ecm_sfe_non
 index a9fb637..fe06de4 100644
 --- a/frontends/sfe/ecm_sfe_non_ported_ipv6.c
 +++ b/frontends/sfe/ecm_sfe_non_ported_ipv6.c
-@@ -1777,11 +1777,8 @@ struct ecm_sfe_non_ported_ipv6_connection_instance *ecm_sfe_non_ported_ipv6_conn
+@@ -1684,11 +1684,8 @@ struct ecm_sfe_non_ported_ipv6_connection_instance *ecm_sfe_non_ported_ipv6_conn
   */
  bool ecm_sfe_non_ported_ipv6_debugfs_init(struct dentry *dentry)
  {
@@ -888,7 +888,7 @@ diff --git a/frontends/sfe/ecm_sfe_ported_ipv4.c b/frontends/sfe/ecm_sfe_ported_
 index fc2c4ba..53f5b07 100644
 --- a/frontends/sfe/ecm_sfe_ported_ipv4.c
 +++ b/frontends/sfe/ecm_sfe_ported_ipv4.c
-@@ -2062,12 +2062,8 @@ bool ecm_sfe_ported_ipv4_debugfs_init(struct dentry *dentry)
+@@ -2005,12 +2005,8 @@ bool ecm_sfe_ported_ipv4_debugfs_init(struct dentry *dentry)
  		return false;
  	}
 
@@ -907,7 +907,7 @@ diff --git a/frontends/sfe/ecm_sfe_ported_ipv6.c b/frontends/sfe/ecm_sfe_ported_
 index 90d642d..ae04cb4 100644
 --- a/frontends/sfe/ecm_sfe_ported_ipv6.c
 +++ b/frontends/sfe/ecm_sfe_ported_ipv6.c
-@@ -2007,12 +2007,8 @@ bool ecm_sfe_ported_ipv6_debugfs_init(struct dentry *dentry)
+@@ -1951,12 +1951,8 @@ bool ecm_sfe_ported_ipv6_debugfs_init(struct dentry *dentry)
  		return false;
  	}
 
